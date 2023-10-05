@@ -1,0 +1,37 @@
+import { Observable } from 'rxjs';
+import { HttpService } from './http.service';
+import * as i0 from "@angular/core";
+export declare class RbacService {
+    private httpService;
+    constructor(httpService: HttpService);
+    getAllUserList(key?: string): Observable<any>;
+    getAllUserOrgList(orgid: any): Observable<Object>;
+    saveUser(data: any): Observable<Object>;
+    updateUser(data: any, userid: string): Observable<Object>;
+    deleteUser(id?: string): Observable<Object>;
+    activateUser(data: any): Observable<Object>;
+    addProviderUser(data: any): Observable<Object>;
+    addUserRole(data: any): Observable<Object>;
+    uploadKey(objparams: any): Observable<Object>;
+    getOrgPolicyGroupList(orgid: any): Observable<Object>;
+    getAllPolicyGroupList(policyGroupId?: number): Observable<Object>;
+    getPolicyGroupById(id: any): Observable<Object>;
+    getPolicyGroupsByManagementGroup(policyGroupId: number): Observable<Object>;
+    createPolicyGroup(data: any): Observable<Object>;
+    updatePolicyGroup(id: number, item: any): Observable<Object>;
+    deletePolicyGroup(id: string): Observable<Object>;
+    getAllUserRole(id?: any): Observable<Object>;
+    deleteRole(id: string): Observable<Object>;
+    getRoleById(roleid: string): Observable<Object>;
+    createRole(data: any): Observable<Object>;
+    updateRole(roleId: any, data: any): Observable<Object>;
+    getLandingPage(id: any): Observable<Object>;
+    createPolicyGroupForRole(roleId: number, data: any): Observable<Object>;
+    updatePolicyGroupForRole(roleId: number, data: any): Observable<Object>;
+    getReportDashbaord(): Observable<Object>;
+    getPermissionRoleById(id: string): Observable<Object>;
+    getManagementGroupTree(_organizationid: any): Observable<Object>;
+    getPermissionsTree(applicationid: any): Observable<Object>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<RbacService, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<RbacService>;
+}
