@@ -27,7 +27,6 @@ import * as i11 from 'primeng/inputtext';
 import { InputTextModule } from 'primeng/inputtext';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccordionModule } from 'primeng/accordion';
-import { ConfirmationService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
@@ -96,6 +95,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ConfirmationService } from 'primeng/api';
 
 class RbacPageaccessService {
     constructor() { }
@@ -180,45 +180,46 @@ PermissionsURL.EndPoints = {
         AllPageTree: '/platform/menu/tree/{applicationid}'
     }
 };
-// export class AccessManagementConfig {
-//   public static EndPoint = {
-//     Organization: {
-//       getOrganizationList: '/org/organization/all',
-//       getOrganization: '/platform/page-designer/page/organization/{orgId}?returnUserPage=false&excludeNoActiveVersionPages=true'
-//     }
-//   };
-// }
 class AccessManagementConfig$2 {
 }
 AccessManagementConfig$2.EndPoint = {
     Organization: {
-        getOrganizationList: '/platform/page-designer/page/organization/all',
+        getOrganizationList: '/org/organization/all',
         getOrganization: '/platform/page-designer/page/organization/{orgId}?returnUserPage=false&excludeNoActiveVersionPages=true'
-    },
-    Page: {
-        getPage: '/page'
-    },
-    Asset: {
-        getAsset: 'asset',
-        getPageAsset: '/platform/page-designer/asset/getpagebyid',
-        getUserAsset: '/platform/page-designer/asset/getUserAssets',
-        getRoleAsset: '/platform/page-designer/asset/getRoleAssets',
-        getPolicyGroupAsset: '/platform/page-designer/asset/getPolicyGroupAssets'
-    },
-    User: {
-        getUser: '/org/user/',
-        getUserList: '/org/user/all',
-        getUserorgList: '/org/user/organization/'
-    },
-    PolicyGroup: {
-        getPolicyGroup: '/platform/page-designer/policyGroup/',
-        getPolicyGroupList: '/platform/page-designer/policyGroup/organization/{organizationid}'
-    },
-    Role: {
-        getRole: '/access-control/role/',
-        getRoleList: '/access-control/role/organization/{orgid}'
     }
 };
+// export class AccessManagementConfig {
+//   public static EndPoint = {
+//     Organization: {
+//       getOrganizationList: '/platform/page-designer/page/organization/all',
+//       getOrganization:
+//         '/platform/page-designer/page/organization/{orgId}?returnUserPage=false&excludeNoActiveVersionPages=true'
+//     },
+//     Page: {
+//       getPage: '/page'
+//     },
+//     Asset: {
+//       getAsset: 'asset',
+//       getPageAsset: '/platform/page-designer/asset/getpagebyid',
+//       getUserAsset: '/platform/page-designer/asset/getUserAssets',
+//       getRoleAsset: '/platform/page-designer/asset/getRoleAssets',
+//       getPolicyGroupAsset: '/platform/page-designer/asset/getPolicyGroupAssets'
+//     },
+//     User: {
+//       getUser: '/org/user/',
+//       getUserList: '/org/user/all',
+//       getUserorgList: '/org/user/organization/'
+//     },
+//     PolicyGroup: {
+//       getPolicyGroup: '/platform/page-designer/policyGroup/',
+//       getPolicyGroupList: '/platform/page-designer/policyGroup/organization/{organizationid}'
+//     },
+//     Role: {
+//       getRole: '/access-control/role/',
+//       getRoleList: '/access-control/role/organization/{orgid}'
+//     }
+//   };
+// }
 class RBACINFO {
     constructor() {
         this.apiHost = '';
@@ -2956,202 +2957,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                 }]
         }] });
 
-class MicrostrategyService {
-    constructor(http, alertService, permissionStore, _storeservice) {
-        this.http = http;
-        this.alertService = alertService;
-        this.permissionStore = permissionStore;
-        this._storeservice = _storeservice;
-        this._storeservice.currentStore.subscribe((res) => {
-            if (res['RBACORG'] && res['RBACORG'] !== '') {
-                this.RBACORG = res['RBACORG'];
-                this.environment = this.RBACORG['environment'] ? this.RBACORG['environment'] : '';
-            }
-        });
-    }
-    getAuthToken() {
-        const body = {
-            username: this.environment.mstrUsername,
-            password: this.environment.mstrPassword,
-            loginMode: 1
-        };
-        return this.http.post(`${this.environment.mstrURL}/api/auth/login`, body, {
-            withCredentials: true,
-            headers: { 'Content-type': 'application/json' },
-            observe: 'response'
-        });
-    }
-    getDossier(projectId, dossierId, pageNo) {
-        const permissions = this.permissionStore.state;
-        const projectUrl = `${this.environment.mstrURL}/app/${projectId}`;
-        const dossierUrl = `${projectUrl}/${dossierId}/${pageNo}`;
-        microstrategy.dossier
-            .create({
-            placeholder: document.getElementById('dossierContainer'),
-            url: dossierUrl,
-            navigationBar: {
-                enabled: true,
-                gotoLibrary: permissions === null || permissions === void 0 ? void 0 : permissions.ANA_LIBRARY,
-                title: true,
-                toc: true,
-                reset: true,
-                reprompt: true,
-                share: true,
-                comment: true,
-                notification: true,
-                filter: true,
-                options: true,
-                search: true,
-                bookmark: true
-            },
-            enableCustomAuthentication: true,
-            enableResponsive: false,
-            containerWidth: 400,
-            containerHeight: 400,
-            customAuthenticationType: microstrategy.dossier.CustomAuthenticationType.AUTH_TOKEN,
-            getLoginToken: () => __awaiter(this, void 0, void 0, function* () {
-                const response = yield this.getAuthToken().toPromise();
-                return response.headers.get('x-mstr-authtoken');
-            })
-        })
-            .catch((_err) => this.alertService.error(`Failed to connect ${this.environment.mstrURL}`));
-    }
-    getLibraryDetails() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const token = yield this.getAuthToken().toPromise();
-            const authtoken = token.headers.get('x-mstr-authtoken');
-            const headerInfo = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-MSTR-AuthToken': authtoken ? authtoken : '',
-                'X-MSTR-ProjectID': this.environment.mstrProjectID
-            };
-            return this.http
-                .get(`${this.environment.mstrURL}/api/library`, {
-                withCredentials: true,
-                headers: headerInfo
-            })
-                .toPromise()
-                .then((response) => {
-                return response.map((mstr) => ({
-                    id: mstr.target.id,
-                    projectId: mstr.projectId,
-                    name: mstr.target.name
-                }));
-            });
-        });
-    }
-}
-MicrostrategyService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, deps: [{ token: i1.HttpClient }, { token: AlertService }, { token: PermissionStore }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
-MicrostrategyService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, providedIn: 'root' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, decorators: [{
-            type: Injectable,
-            args: [{
-                    providedIn: 'root'
-                }]
-        }], ctorParameters: function () { return [{ type: i1.HttpClient }, { type: AlertService }, { type: PermissionStore }, { type: DataStoreService }]; } });
-
-class RbacService {
-    constructor(httpService) {
-        this.httpService = httpService;
-    }
-    getAllUserList(key) {
-        return this.httpService.get(`${UserConfig.EndPoint.User.getAllUserList}/${key}`);
-    }
-    getAllUserOrgList(orgid) {
-        return this.httpService.get(UserConfig.EndPoint.User.getAllUserOrgList + orgid);
-    }
-    saveUser(data) {
-        return this.httpService.post(UserConfig.EndPoint.User.createUser, data);
-    }
-    updateUser(data, userid) {
-        return this.httpService.put(`${UserConfig.EndPoint.User.getAllUserList}/${userid}`, data);
-    }
-    deleteUser(id) {
-        return this.httpService.delete(`${UserConfig.EndPoint.User.getAllUserList}/${id}`);
-    }
-    activateUser(data) {
-        return this.httpService.post(UserConfig.EndPoint.User.activateUser, data);
-    }
-    addProviderUser(data) {
-        return this.httpService.post(UserConfig.EndPoint.Provider.addProviderUser, data);
-    }
-    addUserRole(data) {
-        return this.httpService.post(UserConfig.EndPoint.User.userRole, data);
-    }
-    uploadKey(objparams) {
-        return this.httpService.post(AttachmentConfig.EndPoint.Attachments.UploadKey, objparams);
-    }
-    getOrgPolicyGroupList(orgid) {
-        return this.httpService.get(PolicyGroupConfig.EndPoint.policyGroup.getOrgPolicyGroups.replace('{organizationid}', String(orgid)));
-    }
-    getAllPolicyGroupList(policyGroupId) {
-        const endPoint = policyGroupId
-            ? `${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${policyGroupId}`
-            : PolicyGroupConfig.EndPoint.policyGroup.getAllPolicyGroupList;
-        return this.httpService.get(endPoint);
-    }
-    getPolicyGroupById(id) {
-        return this.httpService.get(PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList + '/' + id);
-    }
-    getPolicyGroupsByManagementGroup(policyGroupId) {
-        return this.httpService.get(`/org/policyGroup/managementgroup/${policyGroupId}`);
-    }
-    createPolicyGroup(data) {
-        return this.httpService.post(PolicyGroupConfig.EndPoint.policyGroup.createPolicyGroup, data);
-    }
-    updatePolicyGroup(id, item) {
-        return this.httpService.put(`${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${id}`, item);
-    }
-    deletePolicyGroup(id) {
-        return this.httpService.delete(`${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${id}`);
-    }
-    getAllUserRole(id) {
-        return this.httpService.get(RoleConfig.EndPoint.role.getAllOrgRole.replace('{orgid}', String(id)));
-    }
-    deleteRole(id) {
-        return this.httpService.delete(`${RoleConfig.EndPoint.role.getAllUserRole}/${id}`);
-    }
-    getRoleById(roleid) {
-        return this.httpService.get(`${RoleConfig.EndPoint.role.getAllUserRole}/${roleid}`);
-    }
-    createRole(data) {
-        return this.httpService.post(RoleConfig.EndPoint.role.createRole, data);
-    }
-    updateRole(roleId, data) {
-        return this.httpService.put(`${RoleConfig.EndPoint.role.getAllUserRole}/${roleId}`, data);
-    }
-    getLandingPage(id) {
-        return this.httpService.get(`${RoleConfig.EndPoint.role.getLandingPage}/${id}`);
-    }
-    createPolicyGroupForRole(roleId, data) {
-        return this.httpService.post(`${RoleConfig.EndPoint.role.addPolicyGroup}/${roleId}/policygroups`, data);
-    }
-    updatePolicyGroupForRole(roleId, data) {
-        return this.httpService.put(`${RoleConfig.EndPoint.role.addPolicyGroup}/${roleId}/policygroups`, data);
-    }
-    getReportDashbaord() {
-        return this.httpService.get(`${RoleConfig.EndPoint.role.dossier}`);
-    }
-    getPermissionRoleById(id) {
-        return this.httpService.get(PermissionsURL.EndPoints.permission.permissionRoleById.replace('{id}', id));
-    }
-    getManagementGroupTree(_organizationid) {
-        return this.httpService.get('/org/management-group/organization/tree');
-    }
-    getPermissionsTree(applicationid) {
-        return this.httpService.get(PermissionsURL.EndPoints.permission.applicationPermissionsTree.replace('{applicationid}', applicationid));
-    }
-}
-RbacService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
-RbacService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, providedIn: 'root' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, decorators: [{
-            type: Injectable,
-            args: [{
-                    providedIn: 'root'
-                }]
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
-
 const DISPLAY_IN_SECONDS = 8;
 class AlertComponent {
     constructor(alertService) {
@@ -4319,7 +4124,7 @@ PicsRbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0"
         PrimengModule,
         OrganizationDropdownModule,
         ManageAccessRadioModule], exports: [PageaccessComponent] });
-PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService], imports: [[
+PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, imports: [[
             CommonModule,
             FormsModule,
             ReactiveFormsModule,
@@ -4428,16 +4233,225 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                         ManageAccessRadioModule,
                     ],
                     exports: [PageaccessComponent],
-                    schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-                    providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService]
+                    schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
                 }]
         }] });
+
+class RbacService {
+    constructor(httpService) {
+        this.httpService = httpService;
+    }
+    getAllUserList(key) {
+        return this.httpService.get(`${UserConfig.EndPoint.User.getAllUserList}/${key}`);
+    }
+    getAllUserOrgList(orgid) {
+        return this.httpService.get(UserConfig.EndPoint.User.getAllUserOrgList + orgid);
+    }
+    saveUser(data) {
+        return this.httpService.post(UserConfig.EndPoint.User.createUser, data);
+    }
+    updateUser(data, userid) {
+        return this.httpService.put(`${UserConfig.EndPoint.User.getAllUserList}/${userid}`, data);
+    }
+    deleteUser(id) {
+        return this.httpService.delete(`${UserConfig.EndPoint.User.getAllUserList}/${id}`);
+    }
+    activateUser(data) {
+        return this.httpService.post(UserConfig.EndPoint.User.activateUser, data);
+    }
+    addProviderUser(data) {
+        return this.httpService.post(UserConfig.EndPoint.Provider.addProviderUser, data);
+    }
+    addUserRole(data) {
+        return this.httpService.post(UserConfig.EndPoint.User.userRole, data);
+    }
+    uploadKey(objparams) {
+        return this.httpService.post(AttachmentConfig.EndPoint.Attachments.UploadKey, objparams);
+    }
+    getOrgPolicyGroupList(orgid) {
+        return this.httpService.get(PolicyGroupConfig.EndPoint.policyGroup.getOrgPolicyGroups.replace('{organizationid}', String(orgid)));
+    }
+    getAllPolicyGroupList(policyGroupId) {
+        const endPoint = policyGroupId
+            ? `${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${policyGroupId}`
+            : PolicyGroupConfig.EndPoint.policyGroup.getAllPolicyGroupList;
+        return this.httpService.get(endPoint);
+    }
+    getPolicyGroupById(id) {
+        return this.httpService.get(PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList + '/' + id);
+    }
+    getPolicyGroupsByManagementGroup(policyGroupId) {
+        return this.httpService.get(`/org/policyGroup/managementgroup/${policyGroupId}`);
+    }
+    createPolicyGroup(data) {
+        return this.httpService.post(PolicyGroupConfig.EndPoint.policyGroup.createPolicyGroup, data);
+    }
+    updatePolicyGroup(id, item) {
+        return this.httpService.put(`${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${id}`, item);
+    }
+    deletePolicyGroup(id) {
+        return this.httpService.delete(`${PolicyGroupConfig.EndPoint.policyGroup.getPolicyGroupList}/${id}`);
+    }
+    getAllUserRole(id) {
+        return this.httpService.get(RoleConfig.EndPoint.role.getAllOrgRole.replace('{orgid}', String(id)));
+    }
+    deleteRole(id) {
+        return this.httpService.delete(`${RoleConfig.EndPoint.role.getAllUserRole}/${id}`);
+    }
+    getRoleById(roleid) {
+        return this.httpService.get(`${RoleConfig.EndPoint.role.getAllUserRole}/${roleid}`);
+    }
+    createRole(data) {
+        return this.httpService.post(RoleConfig.EndPoint.role.createRole, data);
+    }
+    updateRole(roleId, data) {
+        return this.httpService.put(`${RoleConfig.EndPoint.role.getAllUserRole}/${roleId}`, data);
+    }
+    getLandingPage(id) {
+        return this.httpService.get(`${RoleConfig.EndPoint.role.getLandingPage}/${id}`);
+    }
+    createPolicyGroupForRole(roleId, data) {
+        return this.httpService.post(`${RoleConfig.EndPoint.role.addPolicyGroup}/${roleId}/policygroups`, data);
+    }
+    updatePolicyGroupForRole(roleId, data) {
+        return this.httpService.put(`${RoleConfig.EndPoint.role.addPolicyGroup}/${roleId}/policygroups`, data);
+    }
+    getReportDashbaord() {
+        return this.httpService.get(`${RoleConfig.EndPoint.role.dossier}`);
+    }
+    getPermissionRoleById(id) {
+        return this.httpService.get(PermissionsURL.EndPoints.permission.permissionRoleById.replace('{id}', id));
+    }
+    getManagementGroupTree(_organizationid) {
+        return this.httpService.get('/org/management-group/organization/tree');
+    }
+    getPermissionsTree(applicationid) {
+        return this.httpService.get(PermissionsURL.EndPoints.permission.applicationPermissionsTree.replace('{applicationid}', applicationid));
+    }
+}
+RbacService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+RbacService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, decorators: [{
+            type: Injectable,
+            args: [{
+                    providedIn: 'root'
+                }]
+        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+
+class MicrostrategyService {
+    constructor(http, alertService, permissionStore, _storeservice) {
+        this.http = http;
+        this.alertService = alertService;
+        this.permissionStore = permissionStore;
+        this._storeservice = _storeservice;
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res['RBACORG'] && res['RBACORG'] !== '') {
+                this.RBACORG = res['RBACORG'];
+                this.environment = this.RBACORG['environment'] ? this.RBACORG['environment'] : '';
+            }
+        });
+    }
+    getAuthToken() {
+        const body = {
+            username: this.environment.mstrUsername,
+            password: this.environment.mstrPassword,
+            loginMode: 1
+        };
+        return this.http.post(`${this.environment.mstrURL}/api/auth/login`, body, {
+            withCredentials: true,
+            headers: { 'Content-type': 'application/json' },
+            observe: 'response'
+        });
+    }
+    getDossier(projectId, dossierId, pageNo) {
+        const permissions = this.permissionStore.state;
+        const projectUrl = `${this.environment.mstrURL}/app/${projectId}`;
+        const dossierUrl = `${projectUrl}/${dossierId}/${pageNo}`;
+        microstrategy.dossier
+            .create({
+            placeholder: document.getElementById('dossierContainer'),
+            url: dossierUrl,
+            navigationBar: {
+                enabled: true,
+                gotoLibrary: permissions === null || permissions === void 0 ? void 0 : permissions.ANA_LIBRARY,
+                title: true,
+                toc: true,
+                reset: true,
+                reprompt: true,
+                share: true,
+                comment: true,
+                notification: true,
+                filter: true,
+                options: true,
+                search: true,
+                bookmark: true
+            },
+            enableCustomAuthentication: true,
+            enableResponsive: false,
+            containerWidth: 400,
+            containerHeight: 400,
+            customAuthenticationType: microstrategy.dossier.CustomAuthenticationType.AUTH_TOKEN,
+            getLoginToken: () => __awaiter(this, void 0, void 0, function* () {
+                const response = yield this.getAuthToken().toPromise();
+                return response.headers.get('x-mstr-authtoken');
+            })
+        })
+            .catch((_err) => this.alertService.error(`Failed to connect ${this.environment.mstrURL}`));
+    }
+    getLibraryDetails() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const token = yield this.getAuthToken().toPromise();
+            const authtoken = token.headers.get('x-mstr-authtoken');
+            const headerInfo = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-MSTR-AuthToken': authtoken ? authtoken : '',
+                'X-MSTR-ProjectID': this.environment.mstrProjectID
+            };
+            return this.http
+                .get(`${this.environment.mstrURL}/api/library`, {
+                withCredentials: true,
+                headers: headerInfo
+            })
+                .toPromise()
+                .then((response) => {
+                return response.map((mstr) => ({
+                    id: mstr.target.id,
+                    projectId: mstr.projectId,
+                    name: mstr.target.name
+                }));
+            });
+        });
+    }
+}
+MicrostrategyService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, deps: [{ token: i1.HttpClient }, { token: AlertService }, { token: PermissionStore }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
+MicrostrategyService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, decorators: [{
+            type: Injectable,
+            args: [{
+                    providedIn: 'root'
+                }]
+        }], ctorParameters: function () { return [{ type: i1.HttpClient }, { type: AlertService }, { type: PermissionStore }, { type: DataStoreService }]; } });
+
+class ShareDataService {
+    constructor() {
+        this.data = new BehaviorSubject('');
+    }
+}
+ShareDataService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ShareDataService, deps: [], target: i0.ɵɵFactoryTarget.Injectable });
+ShareDataService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ShareDataService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ShareDataService, decorators: [{
+            type: Injectable,
+            args: [{
+                    providedIn: 'root',
+                }]
+        }], ctorParameters: function () { return []; } });
 
 class RbacPageaccessModule {
 }
 RbacPageaccessModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
 RbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, declarations: [RbacPageaccessComponent], imports: [PicsRbacPageaccessModule], exports: [RbacPageaccessComponent] });
-RbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, imports: [[
+RbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService], imports: [[
             PicsRbacPageaccessModule,
         ]] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, decorators: [{
@@ -4451,7 +4465,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     ],
                     exports: [
                         RbacPageaccessComponent
-                    ]
+                    ],
+                    providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService]
                 }]
         }] });
 

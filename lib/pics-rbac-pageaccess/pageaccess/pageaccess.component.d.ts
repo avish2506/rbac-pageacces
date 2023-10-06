@@ -57,7 +57,6 @@ export declare class PageaccessComponent implements OnInit {
     orgId: any;
     environment: any;
     RBACORG: RBACINFO;
-    PERMISSION: any;
     authService: AuthService;
     pId: any;
     fullArray: any;
