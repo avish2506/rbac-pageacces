@@ -1,14 +1,15 @@
 import { AfterViewChecked, ChangeDetectorRef, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../service/auth.service';
 import { AccessManagementCommonService } from '../../urls/access-management-common.service';
 import { Subscription } from 'rxjs';
+import { DataStoreService } from '../../service/data-store.service';
+import { RBACINFO } from '../../urls/rbac-url.config';
 import * as i0 from "@angular/core";
 export declare class ManageAccessRadioComponent implements OnInit, AfterViewChecked, OnDestroy {
     private formBuilder;
     cdRef: ChangeDetectorRef;
     accessManagementService: AccessManagementCommonService;
-    private authService;
+    private _storeservice;
     rbacForm: FormGroup;
     userList: any[];
     policyGroupData: any[];
@@ -27,7 +28,9 @@ export declare class ManageAccessRadioComponent implements OnInit, AfterViewChec
     policyDropdownSettings: {};
     orgSubs: Subscription;
     orgId: any;
-    constructor(formBuilder: FormBuilder, cdRef: ChangeDetectorRef, accessManagementService: AccessManagementCommonService, authService: AuthService);
+    environment: any;
+    RBACORG: RBACINFO;
+    constructor(formBuilder: FormBuilder, cdRef: ChangeDetectorRef, accessManagementService: AccessManagementCommonService, _storeservice: DataStoreService);
     ngOnInit(): void;
     ngOnDestroy(): void;
     ngAfterViewChecked(): void;
