@@ -5290,7 +5290,7 @@
     }());
     RbacPageaccessModule.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: RbacPageaccessModule, deps: [], target: i0__namespace.ɵɵFactoryTarget.NgModule });
     RbacPageaccessModule.ɵmod = i0__namespace.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: RbacPageaccessModule, declarations: [RbacPageaccessComponent], imports: [PicsRbacPageaccessModule], exports: [RbacPageaccessComponent] });
-    RbacPageaccessModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: RbacPageaccessModule, providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService], imports: [[
+    RbacPageaccessModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: RbacPageaccessModule, providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore], imports: [[
                 PicsRbacPageaccessModule,
             ]] });
     i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: RbacPageaccessModule, decorators: [{
@@ -5305,7 +5305,7 @@
                         exports: [
                             RbacPageaccessComponent
                         ],
-                        providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService]
+                        providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore]
                     }]
             }] });
 
