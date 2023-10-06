@@ -4451,7 +4451,7 @@ class RbacPageaccessModule {
 }
 RbacPageaccessModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
 RbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, declarations: [RbacPageaccessComponent], imports: [PicsRbacPageaccessModule], exports: [RbacPageaccessComponent] });
-RbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, providers: [ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore, RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, PermissionDirective, DynamicTabPageService, PageHeaderService], imports: [[
+RbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, providers: [ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore, RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, PermissionDirective, DynamicTabPageService, PageHeaderService, AccessManagementCommonService], imports: [[
             PicsRbacPageaccessModule,
         ]] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, decorators: [{
@@ -4466,7 +4466,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     exports: [
                         RbacPageaccessComponent
                     ],
-                    providers: [ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore, RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, PermissionDirective, DynamicTabPageService, PageHeaderService]
+                    providers: [ConfirmationService, PermissionStore, DataStoreService, PageAccessService, AuthService, ShareDataService, AuthState, AuthStore, RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, PermissionDirective, DynamicTabPageService, PageHeaderService, AccessManagementCommonService]
                 }]
         }] });
 
