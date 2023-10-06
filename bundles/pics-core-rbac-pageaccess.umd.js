@@ -2587,7 +2587,6 @@
 
     var PageaccessComponent = /** @class */ (function () {
         function PageaccessComponent(injector, formBuilder, cdRef, _storeservice, router) {
-            var _this = this;
             this.formBuilder = formBuilder;
             this.cdRef = cdRef;
             this._storeservice = _storeservice;
@@ -2676,12 +2675,12 @@
                 labelKey: 'pagename',
                 searchBy: ['pagename']
             };
-            this.orgSubs = this.authService.orgInfo.subscribe(function (org) {
-                _this.orgId = org;
-                if (_this.orgId) {
-                    _this.getOrganizationPage();
-                }
-            });
+            // this.orgSubs = this.authService.orgInfo.subscribe(org => {
+            //   this.orgId = org;
+            //   if (this.orgId) {
+            //     this.getOrganizationPage();
+            //   }
+            // });
         }
         PageaccessComponent.prototype.ngOnInit = function () {
             var _this = this;
@@ -5155,7 +5154,7 @@
             PrimengModule,
             OrganizationDropdownModule,
             ManageAccessRadioModule], exports: [PageaccessComponent] });
-    PicsRbacPageaccessModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService], imports: [[
+    PicsRbacPageaccessModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0__namespace, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService], imports: [[
                 i6.CommonModule,
                 i1$2.FormsModule,
                 i1$2.ReactiveFormsModule,
@@ -5265,7 +5264,7 @@
                         ],
                         exports: [PageaccessComponent],
                         schemas: [i0.NO_ERRORS_SCHEMA, i0.CUSTOM_ELEMENTS_SCHEMA],
-                        providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService]
+                        providers: [RbacService, MicrostrategyService, i1.HttpClient, HttpService, AlertService, api.ConfirmationService, PermissionStore, DataStoreService, PageAccessService]
                     }]
             }] });
 

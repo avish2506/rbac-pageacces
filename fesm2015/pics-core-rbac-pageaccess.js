@@ -1989,12 +1989,12 @@ class PageaccessComponent {
             labelKey: 'pagename',
             searchBy: ['pagename']
         };
-        this.orgSubs = this.authService.orgInfo.subscribe(org => {
-            this.orgId = org;
-            if (this.orgId) {
-                this.getOrganizationPage();
-            }
-        });
+        // this.orgSubs = this.authService.orgInfo.subscribe(org => {
+        //   this.orgId = org;
+        //   if (this.orgId) {
+        //     this.getOrganizationPage();
+        //   }
+        // });
     }
     ngOnInit() {
         this.orgSubs = this._storeservice.currentStore.subscribe((res) => {
@@ -4319,7 +4319,7 @@ PicsRbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0"
         PrimengModule,
         OrganizationDropdownModule,
         ManageAccessRadioModule], exports: [PageaccessComponent] });
-PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService], imports: [[
+PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService], imports: [[
             CommonModule,
             FormsModule,
             ReactiveFormsModule,
@@ -4429,7 +4429,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     ],
                     exports: [PageaccessComponent],
                     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-                    providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService]
+                    providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AlertService, ConfirmationService, PermissionStore, DataStoreService, PageAccessService]
                 }]
         }] });
 
