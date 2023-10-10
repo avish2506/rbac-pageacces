@@ -13,6 +13,7 @@ export declare class PageaccessComponent implements OnInit {
     cdRef: ChangeDetectorRef;
     private _storeservice;
     private router;
+    private alert;
     rbacForm: FormGroup;
     userList: any[];
     policyGroupData: any[];
@@ -48,7 +49,6 @@ export declare class PageaccessComponent implements OnInit {
     assetList: any;
     policyGroupPages: Array<any>;
     selectedRole: string;
-    alert: AlertService;
     conditions: Array<any>;
     permissions: Array<any>;
     showFieldValidity: boolean;
@@ -62,7 +62,7 @@ export declare class PageaccessComponent implements OnInit {
     pId: any;
     fullArray: any;
     mergedAsset: any;
-    constructor(injector: Injector, formBuilder: FormBuilder, cdRef: ChangeDetectorRef, _storeservice: DataStoreService, router: Router);
+    constructor(injector: Injector, formBuilder: FormBuilder, cdRef: ChangeDetectorRef, _storeservice: DataStoreService, router: Router, alert: AlertService);
     ngOnInit(): void;
     ngOnDestroy(): void;
     loadRbacForm(): void;
