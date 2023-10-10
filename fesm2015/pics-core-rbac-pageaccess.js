@@ -2276,6 +2276,7 @@ class PageaccessComponent {
             const fpages = this.rbacForm.get('fpages').value;
             this.fPagesCheckLength(fpages, pageIds);
             this.selectedPageLevelData = this.rbacForm.get('pageLevelData').value;
+            console.log(this.selectedPageLevelData);
             this.getFieldLevelList('click');
         }
     }
