@@ -2260,7 +2260,7 @@ class PageaccessComponent {
             if (pageIds === null || pageIds === void 0 ? void 0 : pageIds.length) {
                 setTimeout(() => {
                     if (!this.rbacForm.get('ppages').value) {
-                        this.rbacForm.get('ppages').patchValue(pageIds);
+                        this.rbacForm.get('ppages').setValue(pageIds);
                     }
                     this.getPageLevelList('click');
                     if (this.isRunCond) {
