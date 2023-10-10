@@ -2973,7 +2973,6 @@
                 var fpages = this.rbacForm.get('fpages').value;
                 this.fPagesCheckLength(fpages, pageIds);
                 this.selectedPageLevelData = this.rbacForm.get('pageLevelData').value;
-                console.log(this.selectedPageLevelData);
                 this.getFieldLevelList('click');
             }
         };
@@ -2989,10 +2988,8 @@
             if (action === void 0) { action = null; }
             if (pageConfig === void 0) { pageConfig = null; }
             var accessArray = this.rbacForm.get('pageLevelData');
-            console.log(accessArray);
             var formValue = this.rbacForm.getRawValue();
             var pAccessId = this.rbacForm.get('ppages').value;
-            console.log(pAccessId);
             var pId = pAccessId.map(function (key) { return key.pageid || key.id; });
             // first check exist page config
             if (pageConfig !== null) {
@@ -3049,8 +3046,6 @@
                 var pagesFromField = Array.from(new Set(__spreadArray([], __read(this.selectedFieldData)).map(function (ele) { return ele.pageId; }))).filter(function (ele) { return ele; });
                 if (pId === null || pId === void 0 ? void 0 : pId.length) {
                     pagesFromField = pId;
-                    console.log(pagesFromField);
-                    console.log(pId);
                 }
                 if (pagesFromField === null || pagesFromField === void 0 ? void 0 : pagesFromField.length) {
                     accessArray.controls = [];
@@ -3088,7 +3083,6 @@
                 accessArray.controls = [];
                 this.pageAccessService.getAssetByPageId(this.pId).subscribe(function (res) {
                     var data = res['data'];
-                    console.log(data);
                     _this.getAccessArrayCheck(data, formValue, accessArray);
                 });
             }
@@ -3170,7 +3164,6 @@
                 this.checkMergedAsset(data);
                 if (formValue.fieldLevelData.length) {
                     this.selectedFieldData = this.pageAccessService.setSelectedFieldPage(formValue.fieldLevelData, this.selectedFieldData);
-                    console.log(this.selectedFieldData);
                 }
                 var access = null;
                 if ((_a = this.savedFieldPagesPatching) === null || _a === void 0 ? void 0 : _a.length) {

@@ -2276,7 +2276,6 @@ class PageaccessComponent {
             const fpages = this.rbacForm.get('fpages').value;
             this.fPagesCheckLength(fpages, pageIds);
             this.selectedPageLevelData = this.rbacForm.get('pageLevelData').value;
-            console.log(this.selectedPageLevelData);
             this.getFieldLevelList('click');
         }
     }
@@ -2290,10 +2289,8 @@ class PageaccessComponent {
     }
     getPageLevelList(action = null, pageConfig = null) {
         const accessArray = this.rbacForm.get('pageLevelData');
-        console.log(accessArray);
         const formValue = this.rbacForm.getRawValue();
         const pAccessId = this.rbacForm.get('ppages').value;
-        console.log(pAccessId);
         const pId = pAccessId.map(key => key.pageid || key.id);
         // first check exist page config
         if (pageConfig !== null) {
@@ -2346,8 +2343,6 @@ class PageaccessComponent {
             let pagesFromField = Array.from(new Set([...this.selectedFieldData].map(ele => ele.pageId))).filter(ele => ele);
             if (pId === null || pId === void 0 ? void 0 : pId.length) {
                 pagesFromField = pId;
-                console.log(pagesFromField);
-                console.log(pId);
             }
             if (pagesFromField === null || pagesFromField === void 0 ? void 0 : pagesFromField.length) {
                 accessArray.controls = [];
@@ -2382,7 +2377,6 @@ class PageaccessComponent {
             accessArray.controls = [];
             this.pageAccessService.getAssetByPageId(this.pId).subscribe(res => {
                 const data = res['data'];
-                console.log(data);
                 this.getAccessArrayCheck(data, formValue, accessArray);
             });
         }
@@ -2462,7 +2456,6 @@ class PageaccessComponent {
             this.checkMergedAsset(data);
             if (formValue.fieldLevelData.length) {
                 this.selectedFieldData = this.pageAccessService.setSelectedFieldPage(formValue.fieldLevelData, this.selectedFieldData);
-                console.log(this.selectedFieldData);
             }
             let access = null;
             if ((_a = this.savedFieldPagesPatching) === null || _a === void 0 ? void 0 : _a.length) {
