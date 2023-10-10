@@ -2957,7 +2957,7 @@
                 if (pageIds === null || pageIds === void 0 ? void 0 : pageIds.length) {
                     setTimeout(function () {
                         if (!_this.rbacForm.get('ppages').value) {
-                            _this.rbacForm.get('ppages').patchValue(pageIds);
+                            _this.rbacForm.get('ppages').patchValue(pageIds[0]);
                         }
                         _this.getPageLevelList('click');
                         if (_this.isRunCond) {
