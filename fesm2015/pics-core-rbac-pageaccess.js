@@ -1,18 +1,17 @@
 import * as i0 from '@angular/core';
 import { Injectable, Directive, Input, EventEmitter, Component, Output, ViewChild, NgModule, Pipe, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BehaviorSubject, of, Subject, forkJoin } from 'rxjs';
-import * as i1$2 from '@angular/forms';
+import * as i1$1 from '@angular/forms';
 import { FormControl, FormGroup, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { __awaiter } from 'tslib';
-import * as i1 from '@angular/common/http';
-import { HttpHeaders, HttpClientModule, HttpClient } from '@angular/common/http';
-import * as i1$1 from 'ngxf-uploader';
+import * as i1$2 from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import * as i1 from 'ngxf-uploader';
 import { NgxfUploaderModule } from 'ngxf-uploader';
-import 'rxjs/add/operator/map';
-import { throwError } from 'rxjs/internal/observable/throwError';
-import { map, tap, mergeMap } from 'rxjs/operators';
+import { tap, mergeMap } from 'rxjs/operators';
 import * as i3 from '@angular/router';
 import { NavigationStart } from '@angular/router';
+import 'rxjs/add/operator/map';
 import * as i4 from '@angular/material/radio';
 import { MatRadioModule } from '@angular/material/radio';
 import * as i5 from 'primeng/dropdown';
@@ -343,115 +342,17 @@ DynamicTabPageConfig.EndPoint = {
     }
 };
 
-class HttpService {
-    constructor(http, _storeservice) {
-        this.http = http;
-        this._storeservice = _storeservice;
-        this.overrideUrl = true;
-        this.baseUrl = '';
-        this.headers = new HttpHeaders()
-            .set('Accept', 'application/json')
-            .set('Content-Type', 'application/json')
-            .set('role', 'role=CP_PUBLIC');
-        this.showSpinner = new BehaviorSubject(false);
-        this.outsideShowSpinner = new BehaviorSubject(false);
-        this._storeservice.currentStore.subscribe((res) => {
-            if (res['RBACORG'] && res['RBACORG'] !== '') {
-                this.RBACORG = res['RBACORG'];
-                this.url = this.RBACORG['apiHost'] ? this.RBACORG['apiHost'] : 'http://localhost:3000/api';
-                this.tokenKey = this.RBACORG['tokenKey'];
-            }
-        });
-        this.url1 = '';
-    }
-    get(apiRoute) {
-        return this.http.get(`${this.url + apiRoute}`, {
-            headers: this.getHttpNewHeaders()
-        });
-    }
-    post(apiRoute, body) {
-        return this.http.post(`${this.url + apiRoute}`, body, {
-            headers: this.getHttpNewHeaders()
-        });
-    }
-    put(apiRoute, body) {
-        return this.http.put(`${this.url + apiRoute}`, body, {
-            headers: this.getHttpNewHeaders()
-        });
-    }
-    patch(apiRoute, body) {
-        return this.http.patch(`${this.url + apiRoute}`, body, {
-            headers: this.getHttpNewHeaders()
-        });
-    }
-    delete(apiRoute) {
-        return this.http.delete(`${this.url + apiRoute}`, {
-            headers: this.getHttpNewHeaders()
-        });
-    }
-    getHttpHeaders() {
-        return new HttpHeaders().set('key', 'value');
-    }
-    getHttpNewHeaders() {
-        return this.headers.set('Authorization', `Bearer ${this.getToken()}`);
-    }
-    getAttachmentHttpHeaders(contentType) {
-        return new HttpHeaders().set('Content-Type', contentType).set('x-ms-blob-type', 'BlockBlob');
-    }
-    putUpload(apiRoute, body, contentType) {
-        return this.http.put(`${this.url1 + apiRoute}`, body, { headers: this.getAttachmentHttpHeaders(contentType) });
-    }
-    putupload2(apiRoute, body, contenttype) {
-        return this.http
-            .put(`${this.url1 + apiRoute}`, body, {
-            headers: this.getAttachmentHttpHeaders(contenttype),
-            observe: 'response'
-        })
-            .pipe(map(data => {
-            return data;
-        }));
-    }
-    /**
-     *
-     * @param apiRoute
-     * This function will download the stream file from the API service.
-     * No HTTP required for this stream. So used Window.location.href to download the file
-     */
-    getFormDownloaded(apiRoute) {
-        window.location.href = `${this.url + apiRoute}`;
-    }
-    //common http service(optional)
-    handleError(error) {
-        var _a, _b;
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-            // Client-side errors
-            errorMessage = `Error: ${error.error.message}`;
-        }
-        else {
-            // Server-side errors
-            errorMessage = `Error Code: ${error.status}\nMessage: ${((_a = error === null || error === void 0 ? void 0 : error.error) === null || _a === void 0 ? void 0 : _a.message) ? (_b = error === null || error === void 0 ? void 0 : error.error) === null || _b === void 0 ? void 0 : _b.message : error.message}`;
-        }
-        return throwError(errorMessage);
-    }
-    getToken() {
-        const token = this.tokenKey ? this.tokenKey : 'jwt-token';
-        return sessionStorage.getItem(token);
-    }
-}
-HttpService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: HttpService, deps: [{ token: i1.HttpClient }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
-HttpService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: HttpService });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: HttpService, decorators: [{
-            type: Injectable
-        }], ctorParameters: function () { return [{ type: i1.HttpClient }, { type: DataStoreService }]; } });
-
 class DynamicTabPageService {
-    constructor(uploadService, httpService) {
+    constructor(uploadService, _storeservice) {
         this.uploadService = uploadService;
-        this.httpService = httpService;
+        this._storeservice = _storeservice;
         this.isPageDesign = new BehaviorSubject(false);
         this.observePage = this.isPageDesign.asObservable();
-        // This is intentional
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
     getActivePage(tabPageId, permission) {
         return this.httpService.get(`${DynamicTabPageConfig.EndPoint.Page.getActivePage.replace('{id}', tabPageId)}${permission ? '?applyPermissions=true' : ''}`);
@@ -509,14 +410,14 @@ class DynamicTabPageService {
         return this.httpService.post(DynamicTabPageConfig.EndPoint.Attachments.createAttachment, data);
     }
 }
-DynamicTabPageService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: DynamicTabPageService, deps: [{ token: i1$1.NgxfUploaderService }, { token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+DynamicTabPageService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: DynamicTabPageService, deps: [{ token: i1.NgxfUploaderService }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 DynamicTabPageService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: DynamicTabPageService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: DynamicTabPageService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: i1$1.NgxfUploaderService }, { type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: i1.NgxfUploaderService }, { type: DataStoreService }]; } });
 
 class PageHeaderURL {
 }
@@ -527,22 +428,26 @@ PageHeaderURL.EndPoints = {
 };
 
 class PageHeaderService {
-    constructor(httpService) {
-        this.httpService = httpService;
-        // This is intentional
+    constructor(_storeservice) {
+        this._storeservice = _storeservice;
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
     getAuthorizedPages(orgid) {
         return this.httpService.get(PageHeaderURL.EndPoints.page.getAuthorizedPages.replace('{orgid}', orgid));
     }
 }
-PageHeaderService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageHeaderService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+PageHeaderService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageHeaderService, deps: [{ token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 PageHeaderService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageHeaderService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageHeaderService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }]; } });
 
 class AuthURL {
 }
@@ -666,10 +571,17 @@ class AuthState {
 }
 
 class AuthStore extends Store {
-    constructor(httpService) {
+    constructor(_storeservice) {
         super(new AuthState());
-        this.httpService = httpService;
+        this._storeservice = _storeservice;
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
+    // constructor(private httpService: HttpService) {
+    // }
     addAuthInfo(user) {
         this.setState(Object.assign(Object.assign({}, this.state), { user }));
     }
@@ -685,11 +597,11 @@ class AuthStore extends Store {
         }
     }
 }
-AuthStore.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthStore, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+AuthStore.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthStore, deps: [{ token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 AuthStore.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthStore });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthStore, decorators: [{
             type: Injectable
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }]; } });
 
 const credentialsKey = 'jwt-token';
 /**
@@ -795,8 +707,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
         }], ctorParameters: function () { return []; } });
 
 class AuthService {
-    constructor(injector, httpService, store, _router, credentialsService, localstore) {
-        this.httpService = httpService;
+    constructor(_storeservice, injector, store, _router, credentialsService, localstore) {
+        this._storeservice = _storeservice;
         this.store = store;
         this._router = _router;
         this.credentialsService = credentialsService;
@@ -805,6 +717,11 @@ class AuthService {
         this.currentOrgInfo = this.orgInfo.asObservable();
         this.currentMenu = new BehaviorSubject('');
         this.currentMenuInfo = this.currentMenu.asObservable();
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
         this.alertService = injector.get(AlertService);
         this.dynamicTabPageService = injector.get(DynamicTabPageService);
         this.pageHeaderService = injector.get(PageHeaderService);
@@ -998,11 +915,11 @@ class AuthService {
         }
     }
 }
-AuthService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthService, deps: [{ token: i0.Injector }, { token: HttpService }, { token: AuthStore }, { token: i3.Router }, { token: CredentialsService }, { token: LocalService }], target: i0.ɵɵFactoryTarget.Injectable });
+AuthService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthService, deps: [{ token: DataStoreService }, { token: i0.Injector }, { token: AuthStore }, { token: i3.Router }, { token: CredentialsService }, { token: LocalService }], target: i0.ɵɵFactoryTarget.Injectable });
 AuthService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthService });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AuthService, decorators: [{
             type: Injectable
-        }], ctorParameters: function () { return [{ type: i0.Injector }, { type: HttpService }, { type: AuthStore }, { type: i3.Router }, { type: CredentialsService }, { type: LocalService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }, { type: i0.Injector }, { type: AuthStore }, { type: i3.Router }, { type: CredentialsService }, { type: LocalService }]; } });
 
 class AccessManagementConfig {
 }
@@ -1037,9 +954,13 @@ AccessManagementConfig.EndPoint = {
 };
 
 class AccessManagementCommonService {
-    constructor(httpService) {
-        this.httpService = httpService;
-        // This is intentional
+    constructor(_storeservice) {
+        this._storeservice = _storeservice;
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
     set clickableData(data) {
         this.urlData = data;
@@ -1060,14 +981,14 @@ class AccessManagementCommonService {
         return this.httpService.get(AccessManagementConfig.EndPoint.Organization.getOrganizationList);
     }
 }
-AccessManagementCommonService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AccessManagementCommonService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+AccessManagementCommonService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AccessManagementCommonService, deps: [{ token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 AccessManagementCommonService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AccessManagementCommonService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: AccessManagementCommonService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }]; } });
 
 class PermissionDirective {
     constructor(renderer, elementRef, dataStore) {
@@ -1374,8 +1295,8 @@ class ManageAccessRadioComponent {
         this.dropDownSelectedValues.emit(selectedValue);
     }
 }
-ManageAccessRadioComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ManageAccessRadioComponent, deps: [{ token: i1$2.FormBuilder }, { token: i0.ChangeDetectorRef }, { token: AccessManagementCommonService }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Component });
-ManageAccessRadioComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: ManageAccessRadioComponent, selector: "app-manage-access-radio", inputs: { reloadForm: "reloadForm" }, outputs: { accessBy: "accessBy", policyDropdown: "policyDropdown", roleDropdown: "roleDropdown", userDropdown: "userDropdown", dropDownSelectedValues: "dropDownSelectedValues" }, ngImport: i0, template: "<form [formGroup]=\"rbacForm\" class=\"manage-access-radio\">\r\n  <div class=\"row\">\r\n    <div class=\"col-12\">\r\n      <div class=\"strip_head toggleleft\">\r\n        <span class=\"report_head font-weight-bold\">Manage Access By</span>\r\n      </div>\r\n      <mat-radio-group formControlName=\"accessBy\">\r\n        <mat-radio-button value=\"1\" (click)=\"showDorpdowns('1')\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_USERNAME\"\r\n          >User Name</mat-radio-button\r\n        >\r\n        <mat-radio-button value=\"2\" (click)=\"showDorpdowns('2')\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_ROLE\"\r\n          >Role</mat-radio-button\r\n        >\r\n        <mat-radio-button value=\"3\" (click)=\"showDorpdowns('3')\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_POLICY_GROUP\"\r\n          >Policy Group</mat-radio-button\r\n        >\r\n      </mat-radio-group>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"userDropDown\">\r\n      <p class=\"radio-title\">Select User</p>\r\n      <p-dropdown\r\n        inputId=\"role\"\r\n        [options]=\"userList\"\r\n        placeholder=\"Select User\"\r\n        formControlName=\"userId\"\r\n        styleClass=\"w-100\"\r\n        fieldKey=\"SETTINGS_PAG_ACC_ACCESS_USERNAME_USER\"\r\n        optionLabel=\"displayname\"\r\n        optionValue=\"id\"\r\n        [filter]=\"true\"\r\n        ariaFilterLabel=\"null\"\r\n        (onChange)=\"getOrgPages('user')\">\r\n      </p-dropdown>\r\n    </div>\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"roleDropDown\">\r\n      <p class=\"radio-title\">Select Role</p>\r\n      <p-dropdown\r\n        inputId=\"role\"\r\n        [options]=\"roleAddedData\"\r\n        placeholder=\"Select Role\"\r\n        formControlName=\"roleId\"\r\n        fieldKey=\"SETTINGS_PAG_ACC_ACCESS_ROLE_ROLE\"\r\n        styleClass=\"w-100\"\r\n        optionLabel=\"name\"\r\n        optionValue=\"id\"\r\n        [filter]=\"true\"\r\n        ariaFilterLabel=\"null\"\r\n        (onChange)=\"getOrgPages('role')\">\r\n      </p-dropdown>\r\n    </div>\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"policyDropDown\">\r\n      <p class=\"radio-title\">Select Policy Group</p>\r\n      <p-dropdown\r\n        inputId=\"role\"\r\n        [options]=\"policyGroupData\"\r\n        placeholder=\"Select Policy Group\"\r\n        formControlName=\"policyId\"\r\n        styleClass=\"w-100\"\r\n        fieldKey=\"SETTINGS_PAG_ACC_ACCESS_POLICY_GROUP_POLICY\"\r\n        optionLabel=\"policygroupname\"\r\n        optionValue=\"id\"\r\n        [filter]=\"true\"\r\n        ariaFilterLabel=\"null\"\r\n        (onChange)=\"getOrgPages('policy')\">\r\n      </p-dropdown>\r\n    </div>\r\n  </div>\r\n</form>\r\n<br />\r\n", styles: [".mat-radio-group .mat-radio-button{padding-right:10px;font-family:\"Roboto\",sans-serif!important}.radio-title{color:var(--label-text);font-size:var(--font-14);font-weight:600;margin-bottom:10px}:host ::ng-deep .selected-list .c-btn{font-size:var(--base-font-size)}.toggleleft{font-size:var(--font-14);font-weight:600;display:block;padding-bottom:13px}\n"], components: [{ type: i4.MatRadioButton, selector: "mat-radio-button", inputs: ["disableRipple", "tabIndex"], exportAs: ["matRadioButton"] }, { type: i5.Dropdown, selector: "p-dropdown", inputs: ["scrollHeight", "filter", "name", "style", "panelStyle", "styleClass", "panelStyleClass", "readonly", "required", "editable", "appendTo", "tabindex", "placeholder", "filterPlaceholder", "filterLocale", "inputId", "selectId", "dataKey", "filterBy", "autofocus", "resetFilterOnHide", "dropdownIcon", "optionLabel", "optionValue", "optionDisabled", "optionGroupLabel", "optionGroupChildren", "autoDisplayFirst", "group", "showClear", "emptyFilterMessage", "emptyMessage", "virtualScroll", "itemSize", "autoZIndex", "baseZIndex", "showTransitionOptions", "hideTransitionOptions", "ariaFilterLabel", "ariaLabel", "ariaLabelledBy", "filterMatchMode", "maxlength", "tooltip", "tooltipPosition", "tooltipPositionStyle", "tooltipStyleClass", "autofocusFilter", "disabled", "options", "filterValue"], outputs: ["onChange", "onFilter", "onFocus", "onBlur", "onClick", "onShow", "onHide", "onClear"] }], directives: [{ type: i1$2.ɵNgNoValidate, selector: "form:not([ngNoForm]):not([ngNativeValidate])" }, { type: i1$2.NgControlStatusGroup, selector: "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],form:not([ngNoForm]),[ngForm]" }, { type: i1$2.FormGroupDirective, selector: "[formGroup]", inputs: ["formGroup"], outputs: ["ngSubmit"], exportAs: ["ngForm"] }, { type: i4.MatRadioGroup, selector: "mat-radio-group", exportAs: ["matRadioGroup"] }, { type: i1$2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$2.FormControlName, selector: "[formControlName]", inputs: ["disabled", "formControlName", "ngModel"], outputs: ["ngModelChange"] }, { type: PermissionDirective, selector: "[fieldKey]", inputs: ["fieldKey"] }, { type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] });
+ManageAccessRadioComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ManageAccessRadioComponent, deps: [{ token: i1$1.FormBuilder }, { token: i0.ChangeDetectorRef }, { token: AccessManagementCommonService }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Component });
+ManageAccessRadioComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: ManageAccessRadioComponent, selector: "app-manage-access-radio", inputs: { reloadForm: "reloadForm" }, outputs: { accessBy: "accessBy", policyDropdown: "policyDropdown", roleDropdown: "roleDropdown", userDropdown: "userDropdown", dropDownSelectedValues: "dropDownSelectedValues" }, ngImport: i0, template: "<form [formGroup]=\"rbacForm\" class=\"manage-access-radio\">\r\n  <div class=\"row\">\r\n    <div class=\"col-12\">\r\n      <div class=\"strip_head toggleleft\">\r\n        <span class=\"report_head font-weight-bold\">Manage Access By</span>\r\n      </div>\r\n      <mat-radio-group formControlName=\"accessBy\">\r\n        <mat-radio-button value=\"3\" (click)=\"showDorpdowns('3')\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_POLICY_GROUP\">Policy\r\n          Group</mat-radio-button>\r\n        <mat-radio-button value=\"2\" (click)=\"showDorpdowns('2')\"\r\n          fieldKey=\"SETTINGS_PAG_ACC_ACCESS_ROLE\">Role</mat-radio-button>\r\n        <mat-radio-button value=\"1\" (click)=\"showDorpdowns('1')\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_USERNAME\">User\r\n          Name</mat-radio-button>\r\n      </mat-radio-group>\r\n    </div>\r\n  </div>\r\n  <div class=\"row\">\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"userDropDown\">\r\n      <p class=\"radio-title\">Select User</p>\r\n      <p-dropdown inputId=\"role\" [options]=\"userList\" placeholder=\"Select User\" formControlName=\"userId\"\r\n        styleClass=\"w-100\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_USERNAME_USER\" optionLabel=\"displayname\" optionValue=\"id\"\r\n        [filter]=\"true\" ariaFilterLabel=\"null\" (onChange)=\"getOrgPages('user')\">\r\n      </p-dropdown>\r\n    </div>\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"roleDropDown\">\r\n      <p class=\"radio-title\">Select Role</p>\r\n      <p-dropdown inputId=\"role\" [options]=\"roleAddedData\" placeholder=\"Select Role\" formControlName=\"roleId\"\r\n        fieldKey=\"SETTINGS_PAG_ACC_ACCESS_ROLE_ROLE\" styleClass=\"w-100\" optionLabel=\"name\" optionValue=\"id\"\r\n        [filter]=\"true\" ariaFilterLabel=\"null\" (onChange)=\"getOrgPages('role')\">\r\n      </p-dropdown>\r\n    </div>\r\n    <div class=\"col-md-3 col-12 mt-3\" *ngIf=\"policyDropDown\">\r\n      <p class=\"radio-title\">Select Policy Group</p>\r\n      <p-dropdown inputId=\"role\" [options]=\"policyGroupData\" placeholder=\"Select Policy Group\"\r\n        formControlName=\"policyId\" styleClass=\"w-100\" fieldKey=\"SETTINGS_PAG_ACC_ACCESS_POLICY_GROUP_POLICY\"\r\n        optionLabel=\"policygroupname\" optionValue=\"id\" [filter]=\"true\" ariaFilterLabel=\"null\"\r\n        (onChange)=\"getOrgPages('policy')\">\r\n      </p-dropdown>\r\n    </div>\r\n  </div>\r\n</form>\r\n<br />", styles: [".mat-radio-group .mat-radio-button{padding-right:10px;font-family:\"Roboto\",sans-serif!important}.radio-title{color:var(--label-text);font-size:var(--font-14);font-weight:600;margin-bottom:10px}:host ::ng-deep .selected-list .c-btn{font-size:var(--base-font-size)}.toggleleft{font-size:var(--font-14);font-weight:600;display:block;padding-bottom:13px}\n"], components: [{ type: i4.MatRadioButton, selector: "mat-radio-button", inputs: ["disableRipple", "tabIndex"], exportAs: ["matRadioButton"] }, { type: i5.Dropdown, selector: "p-dropdown", inputs: ["scrollHeight", "filter", "name", "style", "panelStyle", "styleClass", "panelStyleClass", "readonly", "required", "editable", "appendTo", "tabindex", "placeholder", "filterPlaceholder", "filterLocale", "inputId", "selectId", "dataKey", "filterBy", "autofocus", "resetFilterOnHide", "dropdownIcon", "optionLabel", "optionValue", "optionDisabled", "optionGroupLabel", "optionGroupChildren", "autoDisplayFirst", "group", "showClear", "emptyFilterMessage", "emptyMessage", "virtualScroll", "itemSize", "autoZIndex", "baseZIndex", "showTransitionOptions", "hideTransitionOptions", "ariaFilterLabel", "ariaLabel", "ariaLabelledBy", "filterMatchMode", "maxlength", "tooltip", "tooltipPosition", "tooltipPositionStyle", "tooltipStyleClass", "autofocusFilter", "disabled", "options", "filterValue"], outputs: ["onChange", "onFilter", "onFocus", "onBlur", "onClick", "onShow", "onHide", "onClear"] }], directives: [{ type: i1$1.ɵNgNoValidate, selector: "form:not([ngNoForm]):not([ngNativeValidate])" }, { type: i1$1.NgControlStatusGroup, selector: "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],form:not([ngNoForm]),[ngForm]" }, { type: i1$1.FormGroupDirective, selector: "[formGroup]", inputs: ["formGroup"], outputs: ["ngSubmit"], exportAs: ["ngForm"] }, { type: i4.MatRadioGroup, selector: "mat-radio-group", exportAs: ["matRadioGroup"] }, { type: i1$1.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$1.FormControlName, selector: "[formControlName]", inputs: ["disabled", "formControlName", "ngModel"], outputs: ["ngModelChange"] }, { type: PermissionDirective, selector: "[fieldKey]", inputs: ["fieldKey"] }, { type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ManageAccessRadioComponent, decorators: [{
             type: Component,
             args: [{
@@ -1383,7 +1304,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     templateUrl: './manage-access-radio.component.html',
                     styleUrls: ['./manage-access-radio.component.scss']
                 }]
-        }], ctorParameters: function () { return [{ type: i1$2.FormBuilder }, { type: i0.ChangeDetectorRef }, { type: AccessManagementCommonService }, { type: DataStoreService }]; }, propDecorators: { accessBy: [{
+        }], ctorParameters: function () { return [{ type: i1$1.FormBuilder }, { type: i0.ChangeDetectorRef }, { type: AccessManagementCommonService }, { type: DataStoreService }]; }, propDecorators: { accessBy: [{
                 type: Output
             }], policyDropdown: [{
                 type: Output
@@ -1398,13 +1319,17 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
             }] } });
 
 class PageAccessService {
-    constructor(httpService) {
-        this.httpService = httpService;
+    constructor(_storeservice) {
+        this._storeservice = _storeservice;
         this.isfull = false;
         this.ishide = false;
         this.isread = false;
         this.isreadwrite = false;
-        // This is intentional
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
     /**
      * when user selected policy
@@ -1903,14 +1828,14 @@ class PageAccessService {
         return this.httpService.get('/applicationaccess/');
     }
 }
-PageAccessService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageAccessService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+PageAccessService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageAccessService, deps: [{ token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 PageAccessService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageAccessService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageAccessService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }]; } });
 
 const DISPLAY_IN_SECONDS = 8;
 class AlertComponent {
@@ -2067,6 +1992,7 @@ class PageaccessComponent {
                 console.log(this.RBACORG, 'RBACORG Event Scheduler');
                 this.environment = this.RBACORG['environment'];
                 this.orgId = parseInt(this.RBACORG['orgID']);
+                this.httpService = res['HTTPSERVICE'];
                 if (this.environment) {
                     this.getOrganizationPage();
                     this.loadRbacForm();
@@ -2913,8 +2839,8 @@ class PageaccessComponent {
         }
     }
 }
-PageaccessComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageaccessComponent, deps: [{ token: i0.Injector }, { token: i1$2.FormBuilder }, { token: i0.ChangeDetectorRef }, { token: DataStoreService }, { token: i3.Router }, { token: AlertService }], target: i0.ɵɵFactoryTarget.Component });
-PageaccessComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: PageaccessComponent, selector: "lib-pageaccess", viewQueries: [{ propertyName: "AddComponent", first: true, predicate: ManageAccessRadioComponent, descendants: true }], ngImport: i0, template: "<app-alert></app-alert>\r\n<div class=\"row rbac-card\">\r\n    <div class=\"col-12\">\r\n      <mat-card class=\"mat-card\">\r\n        <mat-card-content class=\"p-2\">\r\n          <form [formGroup]=\"rbacForm\">\r\n            <app-manage-access-radio\r\n              (accessBy)=\"accessBy($event)\"\r\n              (userDropdown)=\"userDropdown($event)\"\r\n              (roleDropdown)=\"roleDropdown($event)\"\r\n              (policyDropdown)=\"policyDropdown($event)\"\r\n              (dropDownSelectedValues)=\"dropDownSelectedValues($event)\"></app-manage-access-radio>\r\n  \r\n            <h3 class=\"radio-title mb-2\">Page Access Management</h3>\r\n            <mat-card class=\"mat-card\">\r\n              <mat-card-content class=\"p-2\">\r\n                <div class=\"row\">\r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"false\">\r\n                    <label class=\"radio-title\">Modules</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"moduleList\"\r\n                      [settings]=\"moduleDropdownSettings\"\r\n                      onSelect=\"loadSubModule('click')\"\r\n                      onDeSelect=\"removeSubModule($event)\"\r\n                      onSelectAll=\"loadSubModule('click')\"\r\n                      onDeSelectAll=\"removeAllSubModule()\"\r\n                      formControlName=\"module\"></angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"false\">\r\n                    <label class=\"radio-title\">Sub Modules</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"subModuleList\"\r\n                      [settings]=\"submoduleDropdownSettings\"\r\n                      onSelect=\"loadSubModulePage('click')\"\r\n                      onDeSelect=\"removeSubModulePage($event, 'submodule')\"\r\n                      onSelectAll=\"loadSubModulePage('click')\"\r\n                      onDeSelectAll=\"removeAllSubModulePage()\"\r\n                      formControlName=\"submodule\">\r\n                    </angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-12 col-12 mb-3\">\r\n                    <label class=\"radio-title\">Pages</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"pagesList\"\r\n                      [settings]=\"pageDropdownSettings\"\r\n                      (onSelect)=\"populatePage('click')\"\r\n                      fieldKey=\"SETTINGS_PAG_ACC_PAGE\"\r\n                      (onDeSelect)=\"populatePage('click')\"\r\n                      (onSelectAll)=\"populatePage('click')\"\r\n                      (onDeSelectAll)=\"removeAllPopulatePage()\"\r\n                      formControlName=\"pageList\"></angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-12 col-12 mb-3\">\r\n                    <label class=\"radio-title d-block required\">Provide Access by </label>\r\n                    <mat-radio-group formControlName=\"provideAccess\">\r\n                      <mat-radio-button\r\n                        value=\"1\"\r\n                        (click)=\"showLevelAccess('1')\"\r\n                        fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL\"\r\n                        >Page Level&nbsp;&nbsp;\r\n                      </mat-radio-button>\r\n                      <mat-radio-button\r\n                        value=\"2\"\r\n                        (click)=\"showLevelAccess('2')\"\r\n                        fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL\"\r\n                        >Field Level\r\n                      </mat-radio-button>\r\n                    </mat-radio-group>\r\n                  </div>\r\n  \r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"fieldLevelAccess\">\r\n                    <label class=\"radio-title\">Select Page</label>\r\n                    <br />\r\n                    <p-dropdown\r\n                      id=\"selectpage\"\r\n                      ariaLabelledBy=\"selectpage\"\r\n                      [options]=\"selectedPageData\"\r\n                      fieldKey=\"SETTINGS_PAG_ACC_PAGE\"\r\n                      (onChange)=\"getFieldLevelList('click')\"\r\n                      formControlName=\"fpages\"\r\n                      optionLabel=\"pagename\"\r\n                      optionValue=\"id\">\r\n                    </p-dropdown>\r\n                  </div>\r\n                </div>\r\n  \r\n                <div *ngIf=\"pageLevelAccess\" class=\"row\">\r\n                  <div class=\"col-12 mt-3 pageLevelAccessTable\">\r\n                    <table aria-describedby=\"pageLevelAccessTable\" class=\"table table-bordered\">\r\n                      <col />\r\n                      <col style=\"width: 120px\" />\r\n                      <col style=\"width: 120px\" />\r\n                      <col style=\"width: 120px\" />\r\n                      <thead>\r\n                        <th class=\"text-left\">Page Name</th>\r\n                        <th class=\"text-center\">R</th>\r\n                        <th class=\"text-center\">RW</th>\r\n                        <th class=\"text-center\">RWD</th>\r\n                        <th class=\"text-center\">None</th>\r\n                        <th class=\"text-center\">Validity</th>\r\n                      </thead>\r\n                      <tbody>\r\n                        <ng-container\r\n                          formArrayName=\"pageLevelData\"\r\n                          *ngFor=\"let fAccess of rbacForm.get('pageLevelData')['controls']; let i = index\">\r\n                          <tr [formGroup]=\"rbacForm.get('pageLevelData')['controls'][i]\">\r\n                            <td class=\"text-left\">\r\n                              <input\r\n                                style=\"border: none; pointer-events: none; width: 360px\"\r\n                                type=\"text\"\r\n                                formControlName=\"pageName\"\r\n                                placeholder=\"pageleveldata\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                type=\"radio\"\r\n                                value=\"3\"\r\n                                title=\"pageradio{{ i }}\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ_WRITE\"\r\n                                type=\"radio\"\r\n                                value=\"2\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ_WRITE_DELETE\"\r\n                                type=\"radio\"\r\n                                value=\"5\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_NONE\"\r\n                                type=\"radio\"\r\n                                value=\"4\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <ng-container\r\n                                *ngIf=\"\r\n                                  rbacForm.get('pageList')?.value[i]?.activeVersion?.gridconfig ||\r\n                                  rbacForm.get('pageList')?.value[i]?.gridconfig\r\n                                \">\r\n                                <p-dropdown\r\n                                  [options]=\"conditions\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"condition\"\r\n                                  placeholder=\"Select a condition\"\r\n                                  [disabled]=\"fAccess?.value?.pageAccess === '4'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\">\r\n                                </p-dropdown>\r\n                                <input\r\n                                  type=\"number\"\r\n                                  class=\"validity\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  [readonly]=\"fAccess?.value?.pageAccess === '4'\"\r\n                                  [min]=\"1\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_VALIDITY\"\r\n                                  formControlName=\"validity\"\r\n                                  style=\"width: 50px; margin-left: 15px\"\r\n                                  pInputText />\r\n                                <p-dropdown\r\n                                  [options]=\"getFallbackPermission(fAccess)\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"fallbackTo\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  placeholder=\"Select a permission\"\r\n                                  [disabled]=\"fAccess?.value?.pageAccess === '3' || fAccess?.value?.pageAccess === '4'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\"\r\n                                  [style]=\"{ 'margin-left': '15px' }\">\r\n                                </p-dropdown>\r\n                              </ng-container>\r\n                            </td>\r\n                          </tr>\r\n                        </ng-container>\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n                <div class=\"row\" *ngIf=\"fieldLevelAccess\">\r\n                  <div class=\"col-12\">\r\n                    <div class=\"table-responsive\">\r\n                      <table aria-describedby=\"fieldLevelAccessTable\" class=\"table table-bordered\">\r\n                        <col />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <thead>\r\n                          <th class=\"text-left\">Field Name</th>\r\n                          <th class=\"text-center\">Read</th>\r\n                          <th class=\"text-center\">Write</th>\r\n                          <th class=\"text-center\">None</th>\r\n                          <th class=\"text-center\" *ngIf=\"showFieldValidity\">Validity</th>\r\n                        </thead>\r\n                        <tbody>\r\n                          <ng-container\r\n                            formArrayName=\"fieldLevelData\"\r\n                            *ngFor=\"let fAccess of rbacForm.get('fieldLevelData')['controls']; let i = index\">\r\n                            <tr [formGroupName]=\"i\">\r\n                              <td class=\"text-left\">\r\n                                {{ fData[i]['displayname'] }}\r\n  \r\n                                <input type=\"hidden\" formControlName=\"assetid\" value=\"{{ fData[i]['id'] }}\" />\r\n                                <input type=\"hidden\" formControlName=\"pageId\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"3\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"2\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"4\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\" *ngIf=\"showFieldValidity\">\r\n                                <p-dropdown\r\n                                  [options]=\"conditions\"\r\n                                  styleClass=\"condition\"\r\n                                  [disabled]=\"fAccess?.value?.access === '4'\"\r\n                                  formControlName=\"condition\"\r\n                                  placeholder=\"Select a condition\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\">\r\n                                </p-dropdown>\r\n                                <input\r\n                                  type=\"number\"\r\n                                  class=\"validity\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  [min]=\"1\"\r\n                                  formControlName=\"validity\"\r\n                                  [readonly]=\"fAccess?.value?.access === '4'\"\r\n                                  style=\"width: 50px; margin-left: 15px\"\r\n                                  pInputText />\r\n                                <p-dropdown\r\n                                  [options]=\"getFallbackPermission(fAccess)\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"fallbackTo\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  placeholder=\"Select a permission\"\r\n                                  [disabled]=\"fAccess?.value?.access === '4' || fAccess?.value?.access === '3'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\"\r\n                                  [style]=\"{ 'margin-left': '15px' }\">\r\n                                </p-dropdown>\r\n                              </td>\r\n                            </tr>\r\n                          </ng-container>\r\n                        </tbody>\r\n                      </table>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              </mat-card-content>\r\n            </mat-card>\r\n          </form>\r\n          <div class=\"mt-3\" *ngIf=\"!fieldLevelAccess && selectedAccess === 'role'\">\r\n            <h3 class=\"radio-title mb-2\">Policy Groups associated with {{ selectedRole }}</h3>\r\n            <mat-card class=\"mt-2\">\r\n              <mat-card-content>\r\n                <div class=\"row\">\r\n                  <div class=\"col-12 mt-1\" *ngFor=\"let policyGroupPage of policyGroupPages\">\r\n                    <div class=\"radio-title mb-2\">Policy Group: {{ policyGroupPage.name }}</div>\r\n                    <div class=\"table-responsive\">\r\n                      <table id=\"policyGroupTable\" aria-describedby=\"policyGroupTable\" class=\"table table-bordered\">\r\n                        <col />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <thead>\r\n                          <tr>\r\n                            <th scope=\"col\" class=\"text-left\">Page Name</th>\r\n                            <th scope=\"col\" class=\"text-center\">Read</th>\r\n                            <th scope=\"col\" class=\"text-center\">Write</th>\r\n                            <th scope=\"col\" class=\"text-center\">None</th>\r\n                          </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                          <ng-container *ngFor=\"let page of policyGroupPage?.data\">\r\n                            <tr>\r\n                              <td class=\"text-left\">\r\n                                <input\r\n                                  style=\"border: none; pointer-events: none; width: 360px\"\r\n                                  type=\"text\"\r\n                                  title=\"page?.page?.activeVersion?.pagename\"\r\n                                  [value]=\"page?.page?.activeVersion?.pagename\" />\r\n                              </td>\r\n  \r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.read\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_READ\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.readwrite\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_WRITE\" />\r\n                              </td>\r\n  \r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.hide\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_NONE\" />\r\n                              </td>\r\n                            </tr>\r\n                          </ng-container>\r\n                          <ng-container *ngIf=\"policyGroupPage?.data?.length === 0\">\r\n                            <tr>\r\n                              <td class=\"text-center\" colspan=\"4\">No pages associated with Policy Group.</td>\r\n                            </tr>\r\n                          </ng-container>\r\n                        </tbody>\r\n                      </table>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              </mat-card-content>\r\n            </mat-card>\r\n          </div>\r\n          <div class=\"text-right mt-3\">\r\n            <button class=\"btn btn-primary mr-2\" fieldKey=\"SETTINGS_PAG_ACC_BACK\" (click)=\"redirectList()\">Back</button>\r\n            <button class=\"btn btn-cancel mr-2\" fieldKey=\"SETTINGS_PAG_ACC_CLEAR\" (click)=\"resetForm()\">Clear</button>\r\n            <button class=\"btn btn-primary\" fieldKey=\"SETTINGS_PAG_ACC_SAVE\" (click)=\"saveRbac()\">Save</button>\r\n          </div>\r\n        </mat-card-content>\r\n      </mat-card>\r\n    </div>\r\n  </div>\r\n  \r\n", styles: [".mat-card-content .mat-radio-group .mat-radio-button{padding-right:10px;font-family:\"Roboto\",sans-serif!important}.toggleleft{font-size:var(--font-14);font-weight:600;display:block;padding-bottom:13px}:host ::ng-deep .p-dropdown.nobg{background-color:transparent;border:none}:host ::ng-deep .p-dropdown.nobg:hover,:host ::ng-deep .p-dropdown.nobg:focus{background-color:transparent!important;border:none!important}.pageLevelAccessTable table thead tr th,.pageLevelAccessTable table tbody tr td{vertical-align:middle;color:var(--text-dark)}.pageLevelAccessTable table thead tr th input,.pageLevelAccessTable table tbody tr td input{background:var(--bg-light);color:var(--text-dark)}.pageLevelAccessTable table thead tr th a:hover,.pageLevelAccessTable table tbody tr td a:hover{text-decoration:none}:host ::ng-deep .p-inputtext.validity{height:30px;line-height:13px}:host ::ng-deep .p-dropdown.condition{height:30px;line-height:13px}@media screen and (max-width: 990px){:host ::ng-deep .selected-list .c-list{width:calc(100% - 35px)!important}.pageLevelAccessTable{width:100%;overflow:auto}.pageLevelAccessTable .table{margin-bottom:60px}}\n"], components: [{ type: AlertComponent, selector: "app-alert" }, { type: i6$1.MatCard, selector: "mat-card", exportAs: ["matCard"] }, { type: ManageAccessRadioComponent, selector: "app-manage-access-radio", inputs: ["reloadForm"], outputs: ["accessBy", "policyDropdown", "roleDropdown", "userDropdown", "dropDownSelectedValues"] }, { type: i8.AngularMultiSelect, selector: "angular2-multiselect", inputs: ["settings", "data", "loading"], outputs: ["onSelect", "onDeSelect", "onSelectAll", "onDeSelectAll", "onOpen", "onClose", "onScrollToEnd", "onFilterSelectAll", "onFilterDeSelectAll", "onAddFilterNewItem", "onGroupSelect", "onGroupDeSelect"] }, { type: i4.MatRadioButton, selector: "mat-radio-button", inputs: ["disableRipple", "tabIndex"], exportAs: ["matRadioButton"] }, { type: i5.Dropdown, selector: "p-dropdown", inputs: ["scrollHeight", "filter", "name", "style", "panelStyle", "styleClass", "panelStyleClass", "readonly", "required", "editable", "appendTo", "tabindex", "placeholder", "filterPlaceholder", "filterLocale", "inputId", "selectId", "dataKey", "filterBy", "autofocus", "resetFilterOnHide", "dropdownIcon", "optionLabel", "optionValue", "optionDisabled", "optionGroupLabel", "optionGroupChildren", "autoDisplayFirst", "group", "showClear", "emptyFilterMessage", "emptyMessage", "virtualScroll", "itemSize", "autoZIndex", "baseZIndex", "showTransitionOptions", "hideTransitionOptions", "ariaFilterLabel", "ariaLabel", "ariaLabelledBy", "filterMatchMode", "maxlength", "tooltip", "tooltipPosition", "tooltipPositionStyle", "tooltipStyleClass", "autofocusFilter", "disabled", "options", "filterValue"], outputs: ["onChange", "onFilter", "onFocus", "onBlur", "onClick", "onShow", "onHide", "onClear"] }], directives: [{ type: i6$1.MatCardContent, selector: "mat-card-content, [mat-card-content], [matCardContent]" }, { type: i1$2.ɵNgNoValidate, selector: "form:not([ngNoForm]):not([ngNativeValidate])" }, { type: i1$2.NgControlStatusGroup, selector: "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],form:not([ngNoForm]),[ngForm]" }, { type: i1$2.FormGroupDirective, selector: "[formGroup]", inputs: ["formGroup"], outputs: ["ngSubmit"], exportAs: ["ngForm"] }, { type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { type: i1$2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$2.FormControlName, selector: "[formControlName]", inputs: ["disabled", "formControlName", "ngModel"], outputs: ["ngModelChange"] }, { type: PermissionDirective, selector: "[fieldKey]", inputs: ["fieldKey"] }, { type: i4.MatRadioGroup, selector: "mat-radio-group", exportAs: ["matRadioGroup"] }, { type: i6.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { type: i1$2.FormArrayName, selector: "[formArrayName]", inputs: ["formArrayName"] }, { type: i1$2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { type: i1$2.RadioControlValueAccessor, selector: "input[type=radio][formControlName],input[type=radio][formControl],input[type=radio][ngModel]", inputs: ["name", "formControlName", "value"] }, { type: i1$2.NumberValueAccessor, selector: "input[type=number][formControlName],input[type=number][formControl],input[type=number][ngModel]" }, { type: i1$2.MinValidator, selector: "input[type=number][min][formControlName],input[type=number][min][formControl],input[type=number][min][ngModel]", inputs: ["min"] }, { type: i13.InputText, selector: "[pInputText]" }, { type: i1$2.FormGroupName, selector: "[formGroupName]", inputs: ["formGroupName"] }] });
+PageaccessComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageaccessComponent, deps: [{ token: i0.Injector }, { token: i1$1.FormBuilder }, { token: i0.ChangeDetectorRef }, { token: DataStoreService }, { token: i3.Router }, { token: AlertService }], target: i0.ɵɵFactoryTarget.Component });
+PageaccessComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: PageaccessComponent, selector: "lib-pageaccess", viewQueries: [{ propertyName: "AddComponent", first: true, predicate: ManageAccessRadioComponent, descendants: true }], ngImport: i0, template: "<app-alert></app-alert>\r\n<div class=\"row rbac-card\">\r\n    <div class=\"col-12\">\r\n      <mat-card class=\"mat-card\">\r\n        <mat-card-content class=\"p-2\">\r\n          <form [formGroup]=\"rbacForm\">\r\n            <app-manage-access-radio\r\n              (accessBy)=\"accessBy($event)\"\r\n              (userDropdown)=\"userDropdown($event)\"\r\n              (roleDropdown)=\"roleDropdown($event)\"\r\n              (policyDropdown)=\"policyDropdown($event)\"\r\n              (dropDownSelectedValues)=\"dropDownSelectedValues($event)\"></app-manage-access-radio>\r\n\r\n            <h3 class=\"radio-title mb-2\">Page Access Management</h3>\r\n            <mat-card class=\"mat-card\">\r\n              <mat-card-content class=\"p-2\">\r\n                <div class=\"row\">\r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"false\">\r\n                    <label class=\"radio-title\">Modules</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"moduleList\"\r\n                      [settings]=\"moduleDropdownSettings\"\r\n                      onSelect=\"loadSubModule('click')\"\r\n                      onDeSelect=\"removeSubModule($event)\"\r\n                      onSelectAll=\"loadSubModule('click')\"\r\n                      onDeSelectAll=\"removeAllSubModule()\"\r\n                      formControlName=\"module\"></angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"false\">\r\n                    <label class=\"radio-title\">Sub Modules</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"subModuleList\"\r\n                      [settings]=\"submoduleDropdownSettings\"\r\n                      onSelect=\"loadSubModulePage('click')\"\r\n                      onDeSelect=\"removeSubModulePage($event, 'submodule')\"\r\n                      onSelectAll=\"loadSubModulePage('click')\"\r\n                      onDeSelectAll=\"removeAllSubModulePage()\"\r\n                      formControlName=\"submodule\">\r\n                    </angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-12 col-12 mb-3\">\r\n                    <label class=\"radio-title\">Pages</label>\r\n                    <angular2-multiselect\r\n                      [data]=\"pagesList\"\r\n                      [settings]=\"pageDropdownSettings\"\r\n                      (onSelect)=\"populatePage('click')\"\r\n                      fieldKey=\"SETTINGS_PAG_ACC_PAGE\"\r\n                      (onDeSelect)=\"populatePage('click')\"\r\n                      (onSelectAll)=\"populatePage('click')\"\r\n                      (onDeSelectAll)=\"removeAllPopulatePage()\"\r\n                      formControlName=\"pageList\"></angular2-multiselect>\r\n                  </div>\r\n                  <div class=\"col-lg-3 col-md-12 col-12 mb-3\">\r\n                    <label class=\"radio-title d-block required\">Provide Access by </label>\r\n                    <mat-radio-group formControlName=\"provideAccess\">\r\n                      <mat-radio-button\r\n                        value=\"1\"\r\n                        (click)=\"showLevelAccess('1')\"\r\n                        fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL\"\r\n                        >Page Level&nbsp;&nbsp;\r\n                      </mat-radio-button>\r\n                      <mat-radio-button\r\n                        value=\"2\"\r\n                        (click)=\"showLevelAccess('2')\"\r\n                        fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL\"\r\n                        >Field Level\r\n                      </mat-radio-button>\r\n                    </mat-radio-group>\r\n                  </div>\r\n\r\n                  <div class=\"col-lg-3 col-md-6 col-12 mb-3\" *ngIf=\"fieldLevelAccess\">\r\n                    <label class=\"radio-title\">Select Page</label>\r\n                    <br />\r\n                    <p-dropdown\r\n                      id=\"selectpage\"\r\n                      ariaLabelledBy=\"selectpage\"\r\n                      [options]=\"selectedPageData\"\r\n                      fieldKey=\"SETTINGS_PAG_ACC_PAGE\"\r\n                      (onChange)=\"getFieldLevelList('click')\"\r\n                      formControlName=\"fpages\"\r\n                      optionLabel=\"pagename\"\r\n                      optionValue=\"id\">\r\n                    </p-dropdown>\r\n                  </div>\r\n                </div>\r\n\r\n                <div *ngIf=\"pageLevelAccess\" class=\"row\">\r\n                  <div class=\"col-12 mt-3 pageLevelAccessTable\">\r\n                    <table aria-describedby=\"pageLevelAccessTable\" class=\"table table-bordered\">\r\n                      <col />\r\n                      <col style=\"width: 120px\" />\r\n                      <col style=\"width: 120px\" />\r\n                      <col style=\"width: 120px\" />\r\n                      <thead>\r\n                        <th class=\"text-left\">Page Name</th>\r\n                        <th class=\"text-center\">R</th>\r\n                        <th class=\"text-center\">RW</th>\r\n                        <th class=\"text-center\">RWD</th>\r\n                        <th class=\"text-center\">None</th>\r\n                        <th class=\"text-center\">Validity</th>\r\n                      </thead>\r\n                      <tbody>\r\n                        <ng-container\r\n                          formArrayName=\"pageLevelData\"\r\n                          *ngFor=\"let fAccess of rbacForm.get('pageLevelData')['controls']; let i = index\">\r\n                          <tr [formGroup]=\"rbacForm.get('pageLevelData')['controls'][i]\">\r\n                            <td class=\"text-left\">\r\n                              <input\r\n                                style=\"border: none; pointer-events: none; width: 360px\"\r\n                                type=\"text\"\r\n                                formControlName=\"pageName\"\r\n                                placeholder=\"pageleveldata\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                type=\"radio\"\r\n                                value=\"3\"\r\n                                title=\"pageradio{{ i }}\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ_WRITE\"\r\n                                type=\"radio\"\r\n                                value=\"2\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_READ_WRITE_DELETE\"\r\n                                type=\"radio\"\r\n                                value=\"5\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <input\r\n                                (change)=\"changePageAccess(i)\"\r\n                                formControlName=\"pageAccess\"\r\n                                fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_NONE\"\r\n                                type=\"radio\"\r\n                                value=\"4\"\r\n                                title=\"pageradio{{ i }}\" />\r\n                            </td>\r\n                            <td class=\"text-center\">\r\n                              <ng-container\r\n                                *ngIf=\"\r\n                                  rbacForm.get('pageList')?.value[i]?.activeVersion?.gridconfig ||\r\n                                  rbacForm.get('pageList')?.value[i]?.gridconfig\r\n                                \">\r\n                                <p-dropdown\r\n                                  [options]=\"conditions\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"condition\"\r\n                                  placeholder=\"Select a condition\"\r\n                                  [disabled]=\"fAccess?.value?.pageAccess === '4'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\">\r\n                                </p-dropdown>\r\n                                <input\r\n                                  type=\"number\"\r\n                                  class=\"validity\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  [readonly]=\"fAccess?.value?.pageAccess === '4'\"\r\n                                  [min]=\"1\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAGE_PAGE_LEVEL_VALIDITY\"\r\n                                  formControlName=\"validity\"\r\n                                  style=\"width: 50px; margin-left: 15px\"\r\n                                  pInputText />\r\n                                <p-dropdown\r\n                                  [options]=\"getFallbackPermission(fAccess)\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"fallbackTo\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  placeholder=\"Select a permission\"\r\n                                  [disabled]=\"fAccess?.value?.pageAccess === '3' || fAccess?.value?.pageAccess === '4'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\"\r\n                                  [style]=\"{ 'margin-left': '15px' }\">\r\n                                </p-dropdown>\r\n                              </ng-container>\r\n                            </td>\r\n                          </tr>\r\n                        </ng-container>\r\n                      </tbody>\r\n                    </table>\r\n                  </div>\r\n                </div>\r\n                <div class=\"row\" *ngIf=\"fieldLevelAccess\">\r\n                  <div class=\"col-12\">\r\n                    <div class=\"table-responsive\">\r\n                      <table aria-describedby=\"fieldLevelAccessTable\" class=\"table table-bordered\">\r\n                        <col />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <thead>\r\n                          <th class=\"text-left\">Field Name</th>\r\n                          <th class=\"text-center\">Read</th>\r\n                          <th class=\"text-center\">Write</th>\r\n                          <th class=\"text-center\">None</th>\r\n                          <th class=\"text-center\" *ngIf=\"showFieldValidity\">Validity</th>\r\n                        </thead>\r\n                        <tbody>\r\n                          <ng-container\r\n                            formArrayName=\"fieldLevelData\"\r\n                            *ngFor=\"let fAccess of rbacForm.get('fieldLevelData')['controls']; let i = index\">\r\n                            <tr [formGroupName]=\"i\">\r\n                              <td class=\"text-left\">\r\n                                {{ fData[i]['displayname'] }}\r\n\r\n                                <input type=\"hidden\" formControlName=\"assetid\" value=\"{{ fData[i]['id'] }}\" />\r\n                                <input type=\"hidden\" formControlName=\"pageId\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"3\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"2\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  formControlName=\"access\"\r\n                                  (change)=\"changeFieldAccess($event)\"\r\n                                  type=\"radio\"\r\n                                  value=\"4\"\r\n                                  title=\"accessRadio{{ i }}\" />\r\n                              </td>\r\n                              <td class=\"text-center\" *ngIf=\"showFieldValidity\">\r\n                                <p-dropdown\r\n                                  [options]=\"conditions\"\r\n                                  styleClass=\"condition\"\r\n                                  [disabled]=\"fAccess?.value?.access === '4'\"\r\n                                  formControlName=\"condition\"\r\n                                  placeholder=\"Select a condition\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\">\r\n                                </p-dropdown>\r\n                                <input\r\n                                  type=\"number\"\r\n                                  class=\"validity\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  [min]=\"1\"\r\n                                  formControlName=\"validity\"\r\n                                  [readonly]=\"fAccess?.value?.access === '4'\"\r\n                                  style=\"width: 50px; margin-left: 15px\"\r\n                                  pInputText />\r\n                                <p-dropdown\r\n                                  [options]=\"getFallbackPermission(fAccess)\"\r\n                                  styleClass=\"condition\"\r\n                                  formControlName=\"fallbackTo\"\r\n                                  *ngIf=\"fAccess?.value?.condition !== 'always'\"\r\n                                  placeholder=\"Select a permission\"\r\n                                  [disabled]=\"fAccess?.value?.access === '4' || fAccess?.value?.access === '3'\"\r\n                                  optionLabel=\"name\"\r\n                                  optionValue=\"key\"\r\n                                  [style]=\"{ 'margin-left': '15px' }\">\r\n                                </p-dropdown>\r\n                              </td>\r\n                            </tr>\r\n                          </ng-container>\r\n                        </tbody>\r\n                      </table>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              </mat-card-content>\r\n            </mat-card>\r\n          </form>\r\n          <div class=\"mt-3\" *ngIf=\"!fieldLevelAccess && selectedAccess === 'role'\">\r\n            <h3 class=\"radio-title mb-2\">Policy Groups associated with {{ selectedRole }}</h3>\r\n            <mat-card class=\"mt-2\">\r\n              <mat-card-content>\r\n                <div class=\"row\">\r\n                  <div class=\"col-12 mt-1\" *ngFor=\"let policyGroupPage of policyGroupPages\">\r\n                    <div class=\"radio-title mb-2\">Policy Group: {{ policyGroupPage.name }}</div>\r\n                    <div class=\"table-responsive\">\r\n                      <table id=\"policyGroupTable\" aria-describedby=\"policyGroupTable\" class=\"table table-bordered\">\r\n                        <col />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <col style=\"width: 120px\" />\r\n                        <thead>\r\n                          <tr>\r\n                            <th scope=\"col\" class=\"text-left\">Page Name</th>\r\n                            <th scope=\"col\" class=\"text-center\">Read</th>\r\n                            <th scope=\"col\" class=\"text-center\">Write</th>\r\n                            <th scope=\"col\" class=\"text-center\">None</th>\r\n                          </tr>\r\n                        </thead>\r\n                        <tbody>\r\n                          <ng-container *ngFor=\"let page of policyGroupPage?.data\">\r\n                            <tr>\r\n                              <td class=\"text-left\">\r\n                                <input\r\n                                  style=\"border: none; pointer-events: none; width: 360px\"\r\n                                  type=\"text\"\r\n                                  title=\"page?.page?.activeVersion?.pagename\"\r\n                                  [value]=\"page?.page?.activeVersion?.pagename\" />\r\n                              </td>\r\n\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.read\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_READ\" />\r\n                              </td>\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.readwrite\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_WRITE\" />\r\n                              </td>\r\n\r\n                              <td class=\"text-center\">\r\n                                <input\r\n                                  disabled\r\n                                  [checked]=\"page?.hide\"\r\n                                  type=\"radio\"\r\n                                  fieldKey=\"SETTINGS_PAG_ACC_PAG_FIELD_LEVEL_NONE\" />\r\n                              </td>\r\n                            </tr>\r\n                          </ng-container>\r\n                          <ng-container *ngIf=\"policyGroupPage?.data?.length === 0\">\r\n                            <tr>\r\n                              <td class=\"text-center\" colspan=\"4\">No pages associated with Policy Group.</td>\r\n                            </tr>\r\n                          </ng-container>\r\n                        </tbody>\r\n                      </table>\r\n                    </div>\r\n                  </div>\r\n                </div>\r\n              </mat-card-content>\r\n            </mat-card>\r\n          </div>\r\n          <div class=\"text-right mt-3\">\r\n            <!-- <button class=\"btn btn-primary mr-2\" fieldKey=\"SETTINGS_PAG_ACC_BACK\" (click)=\"redirectList()\">Back</button> -->\r\n            <button class=\"btn btn-cancel mr-2\" fieldKey=\"SETTINGS_PAG_ACC_CLEAR\" (click)=\"resetForm()\">Clear</button>\r\n            <button class=\"btn btn-primary\" fieldKey=\"SETTINGS_PAG_ACC_SAVE\" (click)=\"saveRbac()\">Save</button>\r\n          </div>\r\n        </mat-card-content>\r\n      </mat-card>\r\n    </div>\r\n  </div>\r\n\r\n", styles: [".mat-card-content .mat-radio-group .mat-radio-button{padding-right:10px;font-family:\"Roboto\",sans-serif!important}.toggleleft{font-size:var(--font-14);font-weight:600;display:block;padding-bottom:13px}:host ::ng-deep .p-dropdown.nobg{background-color:transparent;border:none}:host ::ng-deep .p-dropdown.nobg:hover,:host ::ng-deep .p-dropdown.nobg:focus{background-color:transparent!important;border:none!important}.pageLevelAccessTable table thead tr th,.pageLevelAccessTable table tbody tr td{vertical-align:middle;color:var(--text-dark)}.pageLevelAccessTable table thead tr th input,.pageLevelAccessTable table tbody tr td input{background:var(--bg-light);color:var(--text-dark)}.pageLevelAccessTable table thead tr th a:hover,.pageLevelAccessTable table tbody tr td a:hover{text-decoration:none}:host ::ng-deep .p-inputtext.validity{height:30px;line-height:13px}:host ::ng-deep .p-dropdown.condition{height:30px;line-height:13px}@media screen and (max-width: 990px){:host ::ng-deep .selected-list .c-list{width:calc(100% - 35px)!important}.pageLevelAccessTable{width:100%;overflow:auto}.pageLevelAccessTable .table{margin-bottom:60px}}\n"], components: [{ type: AlertComponent, selector: "app-alert" }, { type: i6$1.MatCard, selector: "mat-card", exportAs: ["matCard"] }, { type: ManageAccessRadioComponent, selector: "app-manage-access-radio", inputs: ["reloadForm"], outputs: ["accessBy", "policyDropdown", "roleDropdown", "userDropdown", "dropDownSelectedValues"] }, { type: i8.AngularMultiSelect, selector: "angular2-multiselect", inputs: ["settings", "data", "loading"], outputs: ["onSelect", "onDeSelect", "onSelectAll", "onDeSelectAll", "onOpen", "onClose", "onScrollToEnd", "onFilterSelectAll", "onFilterDeSelectAll", "onAddFilterNewItem", "onGroupSelect", "onGroupDeSelect"] }, { type: i4.MatRadioButton, selector: "mat-radio-button", inputs: ["disableRipple", "tabIndex"], exportAs: ["matRadioButton"] }, { type: i5.Dropdown, selector: "p-dropdown", inputs: ["scrollHeight", "filter", "name", "style", "panelStyle", "styleClass", "panelStyleClass", "readonly", "required", "editable", "appendTo", "tabindex", "placeholder", "filterPlaceholder", "filterLocale", "inputId", "selectId", "dataKey", "filterBy", "autofocus", "resetFilterOnHide", "dropdownIcon", "optionLabel", "optionValue", "optionDisabled", "optionGroupLabel", "optionGroupChildren", "autoDisplayFirst", "group", "showClear", "emptyFilterMessage", "emptyMessage", "virtualScroll", "itemSize", "autoZIndex", "baseZIndex", "showTransitionOptions", "hideTransitionOptions", "ariaFilterLabel", "ariaLabel", "ariaLabelledBy", "filterMatchMode", "maxlength", "tooltip", "tooltipPosition", "tooltipPositionStyle", "tooltipStyleClass", "autofocusFilter", "disabled", "options", "filterValue"], outputs: ["onChange", "onFilter", "onFocus", "onBlur", "onClick", "onShow", "onHide", "onClear"] }], directives: [{ type: i6$1.MatCardContent, selector: "mat-card-content, [mat-card-content], [matCardContent]" }, { type: i1$1.ɵNgNoValidate, selector: "form:not([ngNoForm]):not([ngNativeValidate])" }, { type: i1$1.NgControlStatusGroup, selector: "[formGroupName],[formArrayName],[ngModelGroup],[formGroup],form:not([ngNoForm]),[ngForm]" }, { type: i1$1.FormGroupDirective, selector: "[formGroup]", inputs: ["formGroup"], outputs: ["ngSubmit"], exportAs: ["ngForm"] }, { type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { type: i1$1.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$1.FormControlName, selector: "[formControlName]", inputs: ["disabled", "formControlName", "ngModel"], outputs: ["ngModelChange"] }, { type: PermissionDirective, selector: "[fieldKey]", inputs: ["fieldKey"] }, { type: i4.MatRadioGroup, selector: "mat-radio-group", exportAs: ["matRadioGroup"] }, { type: i6.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { type: i1$1.FormArrayName, selector: "[formArrayName]", inputs: ["formArrayName"] }, { type: i1$1.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { type: i1$1.RadioControlValueAccessor, selector: "input[type=radio][formControlName],input[type=radio][formControl],input[type=radio][ngModel]", inputs: ["name", "formControlName", "value"] }, { type: i1$1.NumberValueAccessor, selector: "input[type=number][formControlName],input[type=number][formControl],input[type=number][ngModel]" }, { type: i1$1.MinValidator, selector: "input[type=number][min][formControlName],input[type=number][min][formControl],input[type=number][min][ngModel]", inputs: ["min"] }, { type: i13.InputText, selector: "[pInputText]" }, { type: i1$1.FormGroupName, selector: "[formGroupName]", inputs: ["formGroupName"] }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PageaccessComponent, decorators: [{
             type: Component,
             args: [{
@@ -2922,7 +2848,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     templateUrl: './pageaccess.component.html',
                     styleUrls: ['./pageaccess.component.scss']
                 }]
-        }], ctorParameters: function () { return [{ type: i0.Injector }, { type: i1$2.FormBuilder }, { type: i0.ChangeDetectorRef }, { type: DataStoreService }, { type: i3.Router }, { type: AlertService }]; }, propDecorators: { AddComponent: [{
+        }], ctorParameters: function () { return [{ type: i0.Injector }, { type: i1$1.FormBuilder }, { type: i0.ChangeDetectorRef }, { type: DataStoreService }, { type: i3.Router }, { type: AlertService }]; }, propDecorators: { AddComponent: [{
                 type: ViewChild,
                 args: [ManageAccessRadioComponent]
             }] } });
@@ -2939,6 +2865,7 @@ class RbacPageaccessComponent {
             this.PERMISSION = val.PERMISSION;
             this._storeservice.setData('RBACORG', this.RBACORG);
             this.permissionStore.setStore(this.PERMISSION);
+            this._storeservice.setData('HTTPSERVICE', val.httpService);
         });
     }
 }
@@ -3106,18 +3033,23 @@ class MicrostrategyService {
         });
     }
 }
-MicrostrategyService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, deps: [{ token: i1.HttpClient }, { token: AlertService }, { token: PermissionStore }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
+MicrostrategyService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, deps: [{ token: i1$2.HttpClient }, { token: AlertService }, { token: PermissionStore }, { token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 MicrostrategyService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: MicrostrategyService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: i1.HttpClient }, { type: AlertService }, { type: PermissionStore }, { type: DataStoreService }]; } });
+        }], ctorParameters: function () { return [{ type: i1$2.HttpClient }, { type: AlertService }, { type: PermissionStore }, { type: DataStoreService }]; } });
 
 class RbacService {
-    constructor(httpService) {
-        this.httpService = httpService;
+    constructor(_storeservice) {
+        this._storeservice = _storeservice;
+        this._storeservice.currentStore.subscribe((res) => {
+            if (res) {
+                this.httpService = res['HTTPSERVICE'];
+            }
+        });
     }
     getAllUserList(key) {
         return this.httpService.get(`${UserConfig.EndPoint.User.getAllUserList}/${key}`);
@@ -3207,14 +3139,14 @@ class RbacService {
         return this.httpService.get(PermissionsURL.EndPoints.permission.applicationPermissionsTree.replace('{applicationid}', applicationid));
     }
 }
-RbacService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, deps: [{ token: HttpService }], target: i0.ɵɵFactoryTarget.Injectable });
+RbacService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, deps: [{ token: DataStoreService }], target: i0.ɵɵFactoryTarget.Injectable });
 RbacService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, providedIn: 'root' });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
                 }]
-        }], ctorParameters: function () { return [{ type: HttpService }]; } });
+        }], ctorParameters: function () { return [{ type: DataStoreService }]; } });
 
 class AlertModule {
 }
@@ -4171,7 +4103,7 @@ class OrganizationDropdownComponent {
     }
 }
 OrganizationDropdownComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: OrganizationDropdownComponent, deps: [{ token: AccessManagementCommonService }, { token: AuthService }], target: i0.ɵɵFactoryTarget.Component });
-OrganizationDropdownComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: OrganizationDropdownComponent, selector: "app-organization-dropdown", inputs: { isShow: "isShow", Organization: "Organization" }, outputs: { changeOrganization: "changeOrganization" }, ngImport: i0, template: "<div class=\"row\">\r\n  <div class=\"col-12\">\r\n    <ng-container *ngIf=\"displayCondn\">\r\n      <div class=\"d-block pull-left w-100 my-2\">\r\n        <p class=\"org-title\">Organization Name</p>\r\n        <mat-form-field class=\"w-100\" appearance=\"outline\">\r\n          <mat-select\r\n            placeholder=\"Organization\"\r\n            [(ngModel)]=\"Organization\"\r\n            (selectionChange)=\"onSelectionChange($event)\">\r\n            <mat-option value=\"Select-ALL\"> Select-ALL </mat-option>\r\n            <mat-option *ngFor=\"let org of orgList\" value=\"{{ org.id }}\">\r\n              {{ org.organizationname }}\r\n            </mat-option>\r\n          </mat-select>\r\n        </mat-form-field>\r\n      </div>\r\n    </ng-container>\r\n  </div>\r\n</div>\r\n", styles: [".org-title{margin:0;font-size:12px!important;color:#0079fe}\n"], components: [{ type: i3$1.MatFormField, selector: "mat-form-field", inputs: ["color", "floatLabel", "appearance", "hideRequiredMarker", "hintLabel"], exportAs: ["matFormField"] }, { type: i4$2.MatSelect, selector: "mat-select", inputs: ["disabled", "disableRipple", "tabIndex"], exportAs: ["matSelect"] }, { type: i5$2.MatOption, selector: "mat-option", exportAs: ["matOption"] }], directives: [{ type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { type: i1$2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }, { type: i6.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }] });
+OrganizationDropdownComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: OrganizationDropdownComponent, selector: "app-organization-dropdown", inputs: { isShow: "isShow", Organization: "Organization" }, outputs: { changeOrganization: "changeOrganization" }, ngImport: i0, template: "<div class=\"row\">\r\n  <div class=\"col-12\">\r\n    <ng-container *ngIf=\"displayCondn\">\r\n      <div class=\"d-block pull-left w-100 my-2\">\r\n        <p class=\"org-title\">Organization Name</p>\r\n        <mat-form-field class=\"w-100\" appearance=\"outline\">\r\n          <mat-select\r\n            placeholder=\"Organization\"\r\n            [(ngModel)]=\"Organization\"\r\n            (selectionChange)=\"onSelectionChange($event)\">\r\n            <mat-option value=\"Select-ALL\"> Select-ALL </mat-option>\r\n            <mat-option *ngFor=\"let org of orgList\" value=\"{{ org.id }}\">\r\n              {{ org.organizationname }}\r\n            </mat-option>\r\n          </mat-select>\r\n        </mat-form-field>\r\n      </div>\r\n    </ng-container>\r\n  </div>\r\n</div>\r\n", styles: [".org-title{margin:0;font-size:12px!important;color:#0079fe}\n"], components: [{ type: i3$1.MatFormField, selector: "mat-form-field", inputs: ["color", "floatLabel", "appearance", "hideRequiredMarker", "hintLabel"], exportAs: ["matFormField"] }, { type: i4$2.MatSelect, selector: "mat-select", inputs: ["disabled", "disableRipple", "tabIndex"], exportAs: ["matSelect"] }, { type: i5$2.MatOption, selector: "mat-option", exportAs: ["matOption"] }], directives: [{ type: i6.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { type: i1$1.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i1$1.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }, { type: i6.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: OrganizationDropdownComponent, decorators: [{
             type: Component,
             args: [{
@@ -4305,7 +4237,7 @@ PicsRbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0"
         TabMenuModule,
         TabViewModule,
         TreeSelectModule,
-        HttpClientModule,
+        // HttpClientModule,
         CheckboxModule,
         DropdownModule,
         CardModule,
@@ -4347,7 +4279,7 @@ PicsRbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0"
         PrimengModule,
         OrganizationDropdownModule,
         ManageAccessRadioModule], exports: [PageaccessComponent] });
-PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AuthService, AuthStore, AlertService,
+PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: PicsRbacPageaccessModule, providers: [RbacService, MicrostrategyService, HttpClient, AuthService, AuthStore, AlertService,
         ConfirmationService, PermissionStore, DataStoreService, PageHeaderService,
         PageAccessService, DynamicTabPageService, ShareDataService, AccessManagementCommonService], imports: [[
             CommonModule,
@@ -4357,7 +4289,7 @@ PicsRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0"
             TabMenuModule,
             TabViewModule,
             TreeSelectModule,
-            HttpClientModule,
+            // HttpClientModule,
             CheckboxModule,
             DropdownModule,
             CardModule,
@@ -4414,7 +4346,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                         TabMenuModule,
                         TabViewModule,
                         TreeSelectModule,
-                        HttpClientModule,
+                        // HttpClientModule,
                         CheckboxModule,
                         DropdownModule,
                         CardModule,
@@ -4459,20 +4391,20 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
                     ],
                     exports: [PageaccessComponent],
                     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-                    providers: [RbacService, MicrostrategyService, HttpClient, HttpService, AuthService, AuthStore, AlertService,
+                    providers: [RbacService, MicrostrategyService, HttpClient, AuthService, AuthStore, AlertService,
                         ConfirmationService, PermissionStore, DataStoreService, PageHeaderService,
                         PageAccessService, DynamicTabPageService, ShareDataService, AccessManagementCommonService]
                 }]
         }] });
 
-class RbacPageaccessModule {
+class CardiRbacPageaccessModule {
 }
-RbacPageaccessModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
-RbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, declarations: [RbacPageaccessComponent], imports: [PicsRbacPageaccessModule], exports: [RbacPageaccessComponent] });
-RbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, imports: [[
+CardiRbacPageaccessModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: CardiRbacPageaccessModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+CardiRbacPageaccessModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: CardiRbacPageaccessModule, declarations: [RbacPageaccessComponent], imports: [PicsRbacPageaccessModule], exports: [RbacPageaccessComponent] });
+CardiRbacPageaccessModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: CardiRbacPageaccessModule, imports: [[
             PicsRbacPageaccessModule,
         ]] });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: RbacPageaccessModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: CardiRbacPageaccessModule, decorators: [{
             type: NgModule,
             args: [{
                     declarations: [
@@ -4495,5 +4427,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { RbacPageaccessComponent, RbacPageaccessModule, RbacPageaccessService };
+export { CardiRbacPageaccessModule, RbacPageaccessComponent, RbacPageaccessService };
 //# sourceMappingURL=pics-core-rbac-pageaccess.js.map

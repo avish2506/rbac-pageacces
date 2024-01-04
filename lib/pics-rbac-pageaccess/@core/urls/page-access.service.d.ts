@@ -1,12 +1,13 @@
-import { HttpService } from '../service/http.service';
+import { DataStoreService } from '../service/data-store.service';
 import * as i0 from "@angular/core";
 export declare class PageAccessService {
-    private httpService;
+    private _storeservice;
     isfull: boolean;
     ishide: boolean;
     isread: boolean;
     isreadwrite: boolean;
-    constructor(httpService: HttpService);
+    httpService: any;
+    constructor(_storeservice: DataStoreService);
     /**
      * when user selected policy
      * @param access Raw valur of RBac form
@@ -49,15 +50,15 @@ export declare class PageAccessService {
     getAccessArrayOnClick(pagesFromField: any, pageData: any, selectedFieldData: any, savedPageAccessPatching: any, existingValue: any): any;
     checkFieldLevelExist(fieldLevelExist: any, savedPageAccessPatching: any, _pageAccessValue: any, pagesFromField: any, existingValue: any, i: any): void;
     getAccess(access: any): any;
-    getOrganizationPage(orgId: any): import("rxjs").Observable<Object>;
-    getAssetByPageId(pId: any): import("rxjs").Observable<Object>;
-    createAsset(selectedAccess: any, selectedId: any, asset: any): import("rxjs").Observable<Object>;
-    getAssetById(selectedAccess: string, selectedId: any): import("rxjs").Observable<Object>;
-    getPolicyGroupPage(policygroupid: any): import("rxjs").Observable<Object>;
-    getDynamicPage(selectedAccess: any, selectedId: any): import("rxjs").Observable<Object>;
-    updateDynamicPage(selectedAccess: any, selectedId: any, pageData: any): import("rxjs").Observable<Object>;
-    createAccess(fieldLevelAccess: boolean, accessBy: string, payload: any, userId: any, roleId: any, policyId: any): import("rxjs").Observable<Object>;
-    getApplicationAccess(): import("rxjs").Observable<Object>;
+    getOrganizationPage(orgId: any): any;
+    getAssetByPageId(pId: any): any;
+    createAsset(selectedAccess: any, selectedId: any, asset: any): any;
+    getAssetById(selectedAccess: string, selectedId: any): any;
+    getPolicyGroupPage(policygroupid: any): any;
+    getDynamicPage(selectedAccess: any, selectedId: any): any;
+    updateDynamicPage(selectedAccess: any, selectedId: any, pageData: any): any;
+    createAccess(fieldLevelAccess: boolean, accessBy: string, payload: any, userId: any, roleId: any, policyId: any): any;
+    getApplicationAccess(): any;
     static ɵfac: i0.ɵɵFactoryDeclaration<PageAccessService, never>;
     static ɵprov: i0.ɵɵInjectableDeclaration<PageAccessService>;
 }
