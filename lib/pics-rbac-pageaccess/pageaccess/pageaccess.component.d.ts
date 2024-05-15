@@ -62,7 +62,6 @@ export declare class PageaccessComponent implements OnInit {
     pId: any;
     fullArray: any;
     mergedAsset: any;
-    httpService: any;
     constructor(injector: Injector, formBuilder: FormBuilder, cdRef: ChangeDetectorRef, _storeservice: DataStoreService, router: Router, alert: AlertService);
     ngOnInit(): void;
     ngOnDestroy(): void;
@@ -114,5 +113,5 @@ export declare class PageaccessComponent implements OnInit {
     changeFieldAccess(_index: any): void;
     changePageAccess(index: any): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<PageaccessComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<PageaccessComponent, "lib-pageaccess", never, {}, {}, never, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<PageaccessComponent, "lib-pageaccess", never, {}, {}, never, never, false, never>;
 }
